@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "367109385833",
+    "project_id": "gestion-de-proyectos-f08f1",
+    "storage_bucket": "gestion-de-proyectos-f08f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:367109385833:android:ae1aabbfa8c1ff3f9c3cf8",
+        "android_client_info": {
+          "package_name": "com.gestion.appgestion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "367109385833-on8f4dd19u1ueg23b23vvvoejhk69jtc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gestion.appgestion",
+            "certificate_hash": "2f971fb6ca952cd8c4ba9a07117157e16edd26fe"
+          }
+        },
+        {
+          "client_id": "367109385833-ctsun0d06g22tvsj44lmnaipkp8nq3tt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzGIrmRXtRuGZ3CDiCuCYz3DHwfDXCry4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "367109385833-ctsun0d06g22tvsj44lmnaipkp8nq3tt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
