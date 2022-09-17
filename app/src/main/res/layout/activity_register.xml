@@ -64,9 +64,24 @@
                             style="@style/modifiedEditText"
                             android:hint="Nombre(s)"
                             android:inputType="textPersonName"
-                            android:maxLines="1" />
+                            android:maxLines="1"
+                            android:textSize="16dp"
+                            android:maxLength="60"/>
                     </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputDni"
+                        style="@style/parent"
+                        android:layout_marginTop="@dimen/loginViewsMargin">
 
+                        <EditText
+                            android:id="@+id/editTextDni"
+                            style="@style/modifiedEditText"
+                            android:hint="DNI"
+                            android:inputType="number"
+                            android:maxLines="1"
+                            android:textSize="16dp"
+                            android:maxLength="8"/>
+                    </com.google.android.material.textfield.TextInputLayout>
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/textInputEmail"
                         style="@style/parent"
@@ -77,7 +92,9 @@
                             style="@style/modifiedEditText"
                             android:hint="Correo Electrónico"
                             android:inputType="textEmailAddress"
-                            android:maxLines="1" />
+                            android:maxLines="1"
+                            android:textSize="16dp"
+                            android:maxLength="60"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -90,7 +107,9 @@
                             style="@style/modifiedEditText"
                             android:hint="Número Telefónico"
                             android:inputType="phone"
-                            android:maxLines="1" />
+                            android:maxLines="1"
+                            android:textSize="16dp"
+                            android:maxLength="9"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -103,15 +122,17 @@
                             style="@style/modifiedEditText"
                             android:hint="Contraseña"
                             android:inputType="textPassword"
-                            android:maxLines="1" />
+                            android:maxLines="1"
+                            android:textSize="16dp"
+                            android:maxLength="40"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
-                        android:id="@+id/cirRegisterButton"
+                        android:id="@+id/btnRegistrar"
                         style="@style/loginButton"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="@dimen/loginViewsMargin"
-                        android:text="Registrar"
+                        android:text="Registrar "
                         app:initialCornerAngle="27dp"
                         app:spinning_bar_color="#FFF"
                         app:spinning_bar_padding="6dp"
