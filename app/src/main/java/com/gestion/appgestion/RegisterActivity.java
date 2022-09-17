@@ -27,7 +27,6 @@ public class RegisterActivity extends AppCompatActivity implements  View.OnClick
     Button btnRegistrar;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
-    //FirebaseUser firebaseUser;
     ProgressDialog loadingBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +44,11 @@ public class RegisterActivity extends AppCompatActivity implements  View.OnClick
         btnRegistrar.setOnClickListener(this);
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
-
     }
 
     public void onLoginClick(View view){ //retrocede actividades con animaciones
         startActivity(new Intent(this,LoginActivity.class));
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
-
     }
 
     public void message(String mensaje){
@@ -61,25 +58,25 @@ public class RegisterActivity extends AppCompatActivity implements  View.OnClick
     //evento click botones:
     @Override
     public void onClick(View view) {
-        String nombre = txtNombre.getEditText().getText().toString().trim();
-        String dni    = txtDni.getEditText().getText().toString().trim();
-        String numero_telefono = txtNumeroTelefono.getEditText().getText().toString().trim();
-        String email = txtEmail.getEditText().getText().toString().trim();
-        String password = txtPassword.getEditText().getText().toString().trim();
+        if(btnRegistrar == view){
+            String nombre = txtNombre.getEditText().getText().toString().trim();
+            String dni    = txtDni.getEditText().getText().toString().trim();
+            String numero_telefono = txtNumeroTelefono.getEditText().getText().toString().trim();
+            String email = txtEmail.getEditText().getText().toString().trim();
+            String password = txtPassword.getEditText().getText().toString().trim();
 
-        if(email.isEmpty() || password.isEmpty()){
-            message("Complete todos los campos.");
-        }else{
-            //message(":" + nombre+ ": "+ dni + ": "+ numero_telefono + ": "+ email + ": " + password);
-            registerUser(nombre,dni,numero_telefono,email,password);
+            if(nombre.isEmpty() || dni.isEmpty() || numero_telefono.isEmpty() || email.isEmpty() || password.isEmpty()){
+                message("Complete todos los campos.");
+            }else{
+                //message(":" + nombre+ ": "+ dni + ": "+ numero_telefono + ": "+ email + ": " + password);
+                if(password.length()<=6){
+                    message("La contraseña debe ser mayor a 6 caracteres");
+                }else {
+                    registerUser(nombre, dni, numero_telefono, email, password);
+                }
+            }
         }
-    }
 
-    public void progress(String mensaje){
-        loadingBar=new ProgressDialog(this);
-        loadingBar.setMessage(mensaje);
-        loadingBar.setCanceledOnTouchOutside(false);
-        loadingBar.show();
     }
 
     public void registerUser(String nombre,String dni, String numero_telefono,String email,String password){
@@ -99,10 +96,10 @@ public class RegisterActivity extends AppCompatActivity implements  View.OnClick
                     firestore.collection("usuario").document(id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
-                            //finish();
-                            //startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                            loadingBar.dismiss();
                             message("Los datos se almacenaron correctamente.");
+                            loadingBar.dismiss();
+                            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                            finish();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -118,4 +115,12 @@ public class RegisterActivity extends AppCompatActivity implements  View.OnClick
             }
         });
     }
+
+    public void progress(String mensaje){
+        loadingBar=new ProgressDialog(this);
+        loadingBar.setMessage(mensaje);
+        loadingBar.setCanceledOnTouchOutside(false);
+        loadingBar.show();
+    }
+
 }

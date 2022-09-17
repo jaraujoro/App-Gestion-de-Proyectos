@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class OlvidePassword extends AppCompatActivity  implements  View.OnClickListener{
     TextInputLayout txtcorreo;
-    Button forgetPassword;
+    Button btnForgetPassword;
     private FirebaseAuth firebaseAuth;
     ProgressDialog loadingBar;
     @Override
@@ -29,19 +29,31 @@ public class OlvidePassword extends AppCompatActivity  implements  View.OnClickL
         }
         firebaseAuth = FirebaseAuth.getInstance();
         txtcorreo       = findViewById(R.id.textInputEmail);
-        forgetPassword  = findViewById(R.id.btnOlvidePassword);
-        forgetPassword.setOnClickListener(this);
+        btnForgetPassword  = findViewById(R.id.btnOlvidePassword);
+        btnForgetPassword.setOnClickListener(this);
     }
 
-    public void onLoginClick(View view){ //retrocede actividades con animaciones
+    public void OnClickLoginBack(View view){ //retrocede actividades con animaciones
         startActivity(new Intent(this,LoginActivity.class));
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
-
     }
-    public void onRegisterClick(View view){ //retrocede actividades con animaciones
+
+    public void OnClickRegisterBack(View view){
         startActivity(new Intent(this,RegisterActivity.class));
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
+    }
 
+    //método onclick
+    @Override
+    public void onClick(View view) {
+        if(btnForgetPassword == view){
+            String email = txtcorreo.getEditText().getText().toString();
+            if(!email.isEmpty()){
+                progreso_envio_correo(email);
+            }else{
+                Toast.makeText(getApplicationContext(),"Complete todos los campos.",Toast.LENGTH_LONG).show();
+            }
+        }
     }
     //referencias https://www.geeksforgeeks.org/how-to-change-password-of-user-in-android-using-firebase/
     private void progreso_envio_correo(String email) { //evento progress bar y recuperar contraseña
@@ -55,6 +67,8 @@ public class OlvidePassword extends AppCompatActivity  implements  View.OnClickL
                 loadingBar.dismiss();
                 if(task.isSuccessful()) {
                     Toast.makeText(getApplicationContext(),"Se envio un correo, verifique su bandeja.",Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(OlvidePassword.this, LoginActivity.class));
+                    finish();
                 }
                 else {
                     Toast.makeText(getApplicationContext(),"Correo no existente, verifique su correo ingresado.",Toast.LENGTH_LONG).show();
@@ -67,18 +81,6 @@ public class OlvidePassword extends AppCompatActivity  implements  View.OnClickL
                 Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_LONG).show();
             }
         });
-    }
-    //método onclick
-    @Override
-    public void onClick(View view) {
-        if(forgetPassword == view){
-            String email = txtcorreo.getEditText().getText().toString();
-            if(!email.isEmpty()){
-                progreso_envio_correo(email);
-            }else{
-                Toast.makeText(getApplicationContext(),"Complete el campo.",Toast.LENGTH_LONG).show();
-            }
-        }
     }
 
 }

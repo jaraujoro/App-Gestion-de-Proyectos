@@ -24,16 +24,13 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
-import java.io.Serializable;
 
 
 public class LoginActivity extends AppCompatActivity implements  View.OnClickListener{
     TextInputLayout textInputEmail,textInputPassword;
     Button btnLogin;
-    TextView forgetpassword;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore;
-    private Usuario usuario;
     ProgressDialog loadingBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,16 +44,21 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
         textInputEmail    = findViewById(R.id.textInputEmail);
         textInputPassword = findViewById(R.id.textInputPassword);
         btnLogin          = findViewById(R.id.btnOlvidePassword);
-        forgetpassword    = findViewById(R.id.txtOlvidePassword);
-        forgetpassword.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
     }
 
-    public void onLoginClick(View View){ //retrocede actividades con animaciones
+    public void OnClickRegister(View view){ //retrocede actividades con animaciones
         startActivity(new Intent(this,RegisterActivity.class));
         overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
 
     }
+
+    public void OnClickForgetPassword(View view){
+        startActivity(new Intent(this,OlvidePassword.class));
+        overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
+
+    }
+
     public void message(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
@@ -75,7 +77,7 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
             String email    = textInputEmail.getEditText().getText().toString();
             String password = textInputPassword.getEditText().getText().toString();
             if(email.isEmpty() || password.isEmpty()){
-                message("Completar Todos los campos");
+                message("Complete todos los campos.");
             }else{
                 progress("Validando datos");
                 firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -83,23 +85,21 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             String user_id = firebaseAuth.getCurrentUser().getUid();
-
-                            DocumentReference docRef = firestore.collection("users").document(user_id);
+                            DocumentReference docRef = firestore.collection("usuario").document(user_id);
                             docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                                    usuario = new Usuario();
+                                    Usuario usuario = new Usuario();
                                     usuario.setNombre(documentSnapshot.getString("nombre"));
                                     usuario.setDni(documentSnapshot.getString("dni"));
                                     usuario.setNumero_telefono(documentSnapshot.getString("numero_telefono"));
                                     usuario.setEmail(documentSnapshot.getString("email"));
                                     usuario.setId(documentSnapshot.getString("id"));
-                                    startActivity(new Intent(LoginActivity.this, OlvidePassword.class).putExtra("data", (Serializable) usuario));
+                                    //startActivity(new Intent(LoginActivity.this, OlvidePassword.class).putExtra("data", (Serializable) usuario));
+                                    loadingBar.dismiss();
+                                    message("El usuario es: "+ usuario.getNombre() + "\nCon el dni : "+ usuario.getDni());
                                 }
                             });
-
-                            loadingBar.dismiss();
-                            message("Bienvenido:");
                         } else {
                             loadingBar.dismiss();
                             message("Datos incorrectos, Verifique su correo o contraseña");
@@ -108,14 +108,8 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
                 });
             }
         }
-        if(forgetpassword==view){ //metodo ólvide contraseña
-            startActivity(new Intent(this,OlvidePassword.class));
-            overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
-        }
     }
 }
-
-
 
 /*
     Bundle data = new Bundle();
@@ -127,4 +121,6 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
     Intent intent = new Intent(this, NextActivity.class);
     intent.putExtras(data);
     startActivity(intent);
+    https://www.youtube.com/watch?v=OuvhZTSU5fQ -> 👉 Como Usar el NAVIGATION COMPONENT en ANDROID ❓👈📱 📱
+    https://www.youtube.com/watch?v=yCVfML0wflA&t=399s -> obtener datos según el id_usuario
 */
