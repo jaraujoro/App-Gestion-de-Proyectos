@@ -1,4 +1,4 @@
-package com.gestion.appgestion;
+package com.gestion.appgestion.Vistas;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.gestion.appgestion.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,7 +24,7 @@ import java.util.Map;
 
 
 
-public class RegisterActivity extends AppCompatActivity implements  View.OnClickListener{
+public class Register_Activity extends AppCompatActivity implements  View.OnClickListener{
     TextInputLayout txtNombre,txtDni,txtEmail,txtPassword,txtNumeroTelefono;
     Button btnRegistrar;
     FirebaseAuth firebaseAuth;
@@ -47,7 +49,7 @@ public class RegisterActivity extends AppCompatActivity implements  View.OnClick
     }
 
     public void onLoginClick(View view){ //retrocede actividades con animaciones
-        startActivity(new Intent(this,LoginActivity.class));
+        startActivity(new Intent(this, Login_Activity.class));
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
     }
 
@@ -98,7 +100,7 @@ public class RegisterActivity extends AppCompatActivity implements  View.OnClick
                         public void onSuccess(Void unused) {
                             message("Los datos se almacenaron correctamente.");
                             loadingBar.dismiss();
-                            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                            startActivity(new Intent(Register_Activity.this, Login_Activity.class));
                             finish();
                         }
                     }).addOnFailureListener(new OnFailureListener() {

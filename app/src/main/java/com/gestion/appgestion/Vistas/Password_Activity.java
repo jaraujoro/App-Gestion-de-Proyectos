@@ -1,4 +1,4 @@
-package com.gestion.appgestion;
+package com.gestion.appgestion.Vistas;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,13 +9,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.gestion.appgestion.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class OlvidePassword extends AppCompatActivity  implements  View.OnClickListener{
+public class Password_Activity extends AppCompatActivity  implements  View.OnClickListener{
     TextInputLayout txtcorreo;
     Button btnForgetPassword;
     private FirebaseAuth firebaseAuth;
@@ -23,7 +25,7 @@ public class OlvidePassword extends AppCompatActivity  implements  View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_olvide_password);
+        setContentView(R.layout.activity_password);
         if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){ //oculta la barra superior
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
@@ -34,12 +36,12 @@ public class OlvidePassword extends AppCompatActivity  implements  View.OnClickL
     }
 
     public void OnClickLoginBack(View view){ //retrocede actividades con animaciones
-        startActivity(new Intent(this,LoginActivity.class));
+        startActivity(new Intent(this, Login_Activity.class));
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
     }
 
     public void OnClickRegisterBack(View view){
-        startActivity(new Intent(this,RegisterActivity.class));
+        startActivity(new Intent(this, Register_Activity.class));
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
     }
 
@@ -67,7 +69,7 @@ public class OlvidePassword extends AppCompatActivity  implements  View.OnClickL
                 loadingBar.dismiss();
                 if(task.isSuccessful()) {
                     Toast.makeText(getApplicationContext(),"Se envio un correo, verifique su bandeja.",Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(OlvidePassword.this, LoginActivity.class));
+                    startActivity(new Intent(Password_Activity.this, Login_Activity.class));
                     finish();
                 }
                 else {

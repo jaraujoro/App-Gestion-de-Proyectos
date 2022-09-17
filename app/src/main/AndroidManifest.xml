@@ -16,10 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".OlvidePassword"
+            android:name=".Vistas.Password_Activity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".Vistas.Login_Activity"
             android:exported="true"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RegisterActivity"
+            android:name=".Vistas.Register_Activity"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
