@@ -8,7 +8,7 @@
     android:background="@color/register_bk_color"
     android:focusableInTouchMode="true"
     android:gravity="center"
-    tools:context=".RegisterActivity">
+    tools:context=".Vistas.Register_Activity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                     style="@style/viewParent.headerText.NoMode"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:text="Here’s\nyour first\nstep with \nus! "
+                    android:text="¡Únete\n a nuestro\n \equipo! "
                     android:textColor="@color/whiteTextColor" />
 
                 <ImageView
@@ -62,11 +62,26 @@
                         <EditText
                             android:id="@+id/editTextName"
                             style="@style/modifiedEditText"
-                            android:hint="Name"
+                            android:hint="Nombre(s)"
                             android:inputType="textPersonName"
-                            android:maxLines="1" />
+                            android:maxLines="1"
+                            android:textSize="16dp"
+                            android:maxLength="60"/>
                     </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputDni"
+                        style="@style/parent"
+                        android:layout_marginTop="@dimen/loginViewsMargin">
 
+                        <EditText
+                            android:id="@+id/editTextDni"
+                            style="@style/modifiedEditText"
+                            android:hint="DNI"
+                            android:inputType="number"
+                            android:maxLines="1"
+                            android:textSize="16dp"
+                            android:maxLength="8"/>
+                    </com.google.android.material.textfield.TextInputLayout>
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/textInputEmail"
                         style="@style/parent"
@@ -75,9 +90,11 @@
                         <EditText
                             android:id="@+id/editTextEmail"
                             style="@style/modifiedEditText"
-                            android:hint="@string/login_email_hint"
+                            android:hint="Correo Electrónico"
                             android:inputType="textEmailAddress"
-                            android:maxLines="1" />
+                            android:maxLines="1"
+                            android:textSize="16dp"
+                            android:maxLength="60"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -88,9 +105,11 @@
                         <EditText
                             android:id="@+id/editTextMobile"
                             style="@style/modifiedEditText"
-                            android:hint="Mobile Number"
+                            android:hint="Número Telefónico"
                             android:inputType="phone"
-                            android:maxLines="1" />
+                            android:maxLines="1"
+                            android:textSize="16dp"
+                            android:maxLength="9"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -101,17 +120,19 @@
                         <EditText
                             android:id="@+id/editTextPassword"
                             style="@style/modifiedEditText"
-                            android:hint="@string/login_password_hint"
+                            android:hint="Contraseña"
                             android:inputType="textPassword"
-                            android:maxLines="1" />
+                            android:maxLines="1"
+                            android:textSize="16dp"
+                            android:maxLength="40"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
-                        android:id="@+id/cirRegisterButton"
+                        android:id="@+id/btnRegistrar"
                         style="@style/loginButton"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="@dimen/loginViewsMargin"
-                        android:text="Register"
+                        android:text="Registrar "
                         app:initialCornerAngle="27dp"
                         app:spinning_bar_color="#FFF"
                         app:spinning_bar_padding="6dp"
@@ -121,7 +142,7 @@
                         style="@style/parent"
                         android:layout_marginTop="@dimen/loginViewsMargin"
                         android:onClick="onLoginClick"
-                        android:text="Already have an account?"
+                        android:text="Iniciar Sesión"
                         android:textAlignment="center"
                         android:textColor="@color/themeColor"
                         android:textSize="17sp"
@@ -149,7 +170,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="6"
-                    android:text="Use other Methods"
+                    android:text="Registrarse con:"
                     android:textAlignment="center"
                     android:textColor="@color/whiteTextColor"
                     android:textSize="12sp" />
