@@ -84,5 +84,5 @@ public class Password_Activity extends AppCompatActivity  implements  View.OnCli
             }
         });
     }
-z
+
 }
