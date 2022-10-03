@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -46,6 +46,12 @@
         <item name="android:textSize">@dimen/newsMoreTextSize</item>
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:paddingLeft">5dp</item>
+    </style>
+
+    <style name="BottomNavigation">
+        <item name="android:background">@color/green_dark</item>
+        <item name="itemIconTint">@color/green_light_2</item>
+        <item name="itemTextColor">@color/green_light_2</item>
     </style>
 
 </resources>

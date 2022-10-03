@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.gestion.appgestion.R;
-import com.gestion.appgestion.Usuario.Usuario;
+import com.gestion.appgestion.Modelo.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -69,7 +69,7 @@ public class Login_Activity extends AppCompatActivity implements  View.OnClickLi
         loadingBar.setCanceledOnTouchOutside(false);
         loadingBar.show();
     }
-
+    //https://www.youtube.com/watch?v=rm9NGA9UBXs&t=433s
     //metodo onclick
     @Override
     public void onClick(View view) {
@@ -95,9 +95,11 @@ public class Login_Activity extends AppCompatActivity implements  View.OnClickLi
                                     usuario.setNumero_telefono(documentSnapshot.getString("numero_telefono"));
                                     usuario.setEmail(documentSnapshot.getString("email"));
                                     usuario.setId(documentSnapshot.getString("id"));
-                                    //startActivity(new Intent(LoginActivity.this, OlvidePassword.class).putExtra("data", (Serializable) usuario));
                                     loadingBar.dismiss();
-                                    message("El usuario es: "+ usuario.getNombre() + "\nCon el dni : "+ usuario.getDni());
+                                    startActivity(new Intent(Login_Activity.this,Menu_Activity.class));
+                                    //startActivity(new Intent(LoginActivity.this, OlvidePassword.class).putExtra("data", (Serializable) usuario));
+                                    finish();
+                                    //message("El usuario es: "+ usuario.getNombre() + "\nCon el dni : "+ usuario.getDni());
                                 }
                             });
                         } else {

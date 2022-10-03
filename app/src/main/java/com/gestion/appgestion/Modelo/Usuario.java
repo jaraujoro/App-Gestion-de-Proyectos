@@ -1,4 +1,4 @@
-package com.gestion.appgestion.Usuario;
+package com.gestion.appgestion.Modelo;
 
 public class Usuario {
     private String id;
