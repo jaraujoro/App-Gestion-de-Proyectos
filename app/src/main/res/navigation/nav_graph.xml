@@ -8,30 +8,22 @@
         android:id="@+id/registrar_usuario"
         android:name="com.gestion.appgestion.Vistas.Register_Activity"
         android:label="activity_register"
-        tools:layout="@layout/activity_register" >
-        <action
-            android:id="@+id/action_registrar_usuario_to_pantalla_principal"
-            app:destination="@id/pantalla_principal" />
-    </fragment>
+        tools:layout="@layout/activity_register" />
     <fragment
         android:id="@+id/olvide_contraseña"
         android:name="com.gestion.appgestion.Vistas.Password_Activity"
         android:label="activity_olvide_password"
-        tools:layout="@layout/activity_password">
-        <action
-            android:id="@+id/action_olvide_contraseña_to_pantalla_principal"
-            app:destination="@id/pantalla_principal" />
-    </fragment>
+        tools:layout="@layout/activity_password"/>
     <fragment
         android:id="@+id/pantalla_principal"
         android:name="com.gestion.appgestion.Vistas.Password_Activity"
         android:label="activity_login"
         tools:layout="@layout/activity_login">
         <action
-            android:id="@+id/action_main_to_registerActivity2"
-            app:destination="@id/registrar_usuario" />
-        <action
             android:id="@+id/action_pantalla_principal_to_olvide_contraseña"
             app:destination="@id/olvide_contraseña" />
+        <action
+            android:id="@+id/action_pantalla_principal_to_registrar_usuario"
+            app:destination="@id/registrar_usuario" />
     </fragment>
 </navigation>

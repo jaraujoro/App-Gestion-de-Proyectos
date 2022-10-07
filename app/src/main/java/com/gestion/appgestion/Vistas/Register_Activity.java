@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.gestion.appgestion.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -48,7 +47,12 @@ public class Register_Activity extends AppCompatActivity implements  View.OnClic
         firestore = FirebaseFirestore.getInstance();
     }
 
-    public void onLoginClick(View view){ //retrocede actividades con animaciones
+    public void onLoginClickBack1(View view){ //retrocede actividades con animaciones
+        startActivity(new Intent(this, Login_Activity.class));
+        overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
+    }
+
+    public void onLoginClickBack2(View view){ //retrocede actividades con animaciones
         startActivity(new Intent(this, Login_Activity.class));
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
     }
@@ -57,8 +61,8 @@ public class Register_Activity extends AppCompatActivity implements  View.OnClic
         Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_SHORT).show();
     }
 
-    //evento click botones:
-    @Override
+
+    @Override //evento click botones:
     public void onClick(View view) {
         if(btnRegistrar == view){
             String nombre = txtNombre.getEditText().getText().toString().trim();
@@ -66,11 +70,9 @@ public class Register_Activity extends AppCompatActivity implements  View.OnClic
             String numero_telefono = txtNumeroTelefono.getEditText().getText().toString().trim();
             String email = txtEmail.getEditText().getText().toString().trim();
             String password = txtPassword.getEditText().getText().toString().trim();
-
             if(nombre.isEmpty() || dni.isEmpty() || numero_telefono.isEmpty() || email.isEmpty() || password.isEmpty()){
                 message("Complete todos los campos.");
             }else{
-                //message(":" + nombre+ ": "+ dni + ": "+ numero_telefono + ": "+ email + ": " + password);
                 if(password.length()<=6){
                     message("La contraseña debe ser mayor a 6 caracteres");
                 }else {
@@ -87,7 +89,7 @@ public class Register_Activity extends AppCompatActivity implements  View.OnClic
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    String id = firebaseAuth.getCurrentUser().getUid();//FirebaseUser user = firebaseAuth.getCurrentUser();
+                    String id = firebaseAuth.getCurrentUser().getUid();
                     Map<String, Object> map = new HashMap<>();
                     map.put("id", id);
                     map.put("nombre", nombre);
@@ -95,11 +97,13 @@ public class Register_Activity extends AppCompatActivity implements  View.OnClic
                     map.put("numero_telefono",numero_telefono);
                     map.put("email", email );
                     map.put("password", password);
+                    map.put("photo_user", "");
                     firestore.collection("usuario").document(id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
                             message("Los datos se almacenaron correctamente.");
                             loadingBar.dismiss();
+                            firebaseAuth.signOut();
                             startActivity(new Intent(Register_Activity.this, Login_Activity.class));
                             finish();
                         }

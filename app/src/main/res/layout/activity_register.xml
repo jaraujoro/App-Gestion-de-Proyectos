@@ -63,6 +63,7 @@
                             android:id="@+id/editTextName"
                             style="@style/modifiedEditText"
                             android:hint="Nombre(s)"
+                            android:drawableStart="@drawable/ic_baseline_person_24"
                             android:inputType="textPersonName"
                             android:maxLines="1"
                             android:textSize="16dp"
@@ -76,7 +77,8 @@
                         <EditText
                             android:id="@+id/editTextDni"
                             style="@style/modifiedEditText"
-                            android:hint="DNI"
+                            android:hint="Nº Documento"
+                            android:drawableStart="@drawable/ic_baseline_credit_card_24"
                             android:inputType="number"
                             android:maxLines="1"
                             android:textSize="16dp"
@@ -92,6 +94,7 @@
                             style="@style/modifiedEditText"
                             android:hint="Correo Electrónico"
                             android:inputType="textEmailAddress"
+                            android:drawableStart="@drawable/ic_baseline_email_24"
                             android:maxLines="1"
                             android:textSize="16dp"
                             android:maxLength="60"/>
@@ -106,6 +109,7 @@
                             android:id="@+id/editTextMobile"
                             style="@style/modifiedEditText"
                             android:hint="Número Telefónico"
+                            android:drawableStart="@drawable/ic_baseline_phone_iphone_24"
                             android:inputType="phone"
                             android:maxLines="1"
                             android:textSize="16dp"
@@ -115,12 +119,16 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/textInputPassword"
                         style="@style/parent"
-                        android:layout_marginTop="@dimen/loginViewsMargin">
+                        android:layout_marginTop="@dimen/loginViewsMargin"
+                        app:passwordToggleEnabled="true"
+                        >
 
                         <EditText
                             android:id="@+id/editTextPassword"
                             style="@style/modifiedEditText"
                             android:hint="Contraseña"
+                            android:drawableStart="@drawable/ic_baseline_lock_24"
+                            android:drawableEnd="@drawable/ic_baseline_visibility_off_24"
                             android:inputType="textPassword"
                             android:maxLines="1"
                             android:textSize="16dp"
@@ -141,7 +149,7 @@
                     <TextView
                         style="@style/parent"
                         android:layout_marginTop="@dimen/loginViewsMargin"
-                        android:onClick="onLoginClick"
+                        android:onClick="onLoginClickBack1"
                         android:text="Iniciar Sesión"
                         android:textAlignment="center"
                         android:textColor="@color/themeColor"
@@ -222,6 +230,6 @@
         android:layout_marginRight="11dp"
         android:layout_marginBottom="30dp"
         android:adjustViewBounds="false"
-        android:onClick="onLoginClick"
+        android:onClick="onLoginClickBack2"
         android:src="@drawable/ic_back_img" />
 </RelativeLayout>

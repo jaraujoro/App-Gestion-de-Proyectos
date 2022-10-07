@@ -1,22 +1,26 @@
 package com.gestion.appgestion.Modelo;
 
-public class Usuario {
+import java.io.Serializable;
+
+public class Usuario  implements Serializable {
+
     private String id;
     private String nombre;
     private String dni;
     private String numero_telefono;
     private String email;
-
-    public Usuario(String id, String nombre, String dni, String numero_telefono, String email) {
-        this.id = id;
-        this.nombre = nombre;
-        this.dni = dni;
-        this.numero_telefono = numero_telefono;
-        this.email = email;
-    }
+    private String photo;
 
     public Usuario(){
         //this user class here
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     public String getId() {

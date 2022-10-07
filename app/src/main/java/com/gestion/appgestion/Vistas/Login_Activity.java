@@ -4,12 +4,17 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.gestion.appgestion.R;
 import com.gestion.appgestion.Modelo.Usuario;
@@ -18,12 +23,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.io.Serializable;
 
 
 public class Login_Activity extends AppCompatActivity implements  View.OnClickListener{
@@ -47,16 +54,27 @@ public class Login_Activity extends AppCompatActivity implements  View.OnClickLi
         btnLogin.setOnClickListener(this);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser user  = firebaseAuth.getCurrentUser();
+        if(user != null) {
+            startActivity(new Intent(Login_Activity.this, Menu_Activity.class));
+            finish();
+        }
+    }
+
     public void OnClickRegister(View view){ //retrocede actividades con animaciones
         startActivity(new Intent(this, Register_Activity.class));
         overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
-
     }
-
+    public void OnClickRegister2(View view){ //retrocede actividades con animaciones
+        startActivity(new Intent(this, Register_Activity.class));
+        overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
+    }
     public void OnClickForgetPassword(View view){
         startActivity(new Intent(this, Password_Activity.class));
         overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
-
     }
 
     public void message(String message){
@@ -69,9 +87,9 @@ public class Login_Activity extends AppCompatActivity implements  View.OnClickLi
         loadingBar.setCanceledOnTouchOutside(false);
         loadingBar.show();
     }
-    //https://www.youtube.com/watch?v=rm9NGA9UBXs&t=433s
-    //metodo onclick
-    @Override
+
+
+    @Override //metodo onclick
     public void onClick(View view) {
         if(btnLogin == view){ //metodo para ingresar al sistema, se valida el usuario y contraseña
             String email    = textInputEmail.getEditText().getText().toString();
@@ -95,9 +113,10 @@ public class Login_Activity extends AppCompatActivity implements  View.OnClickLi
                                     usuario.setNumero_telefono(documentSnapshot.getString("numero_telefono"));
                                     usuario.setEmail(documentSnapshot.getString("email"));
                                     usuario.setId(documentSnapshot.getString("id"));
+                                    //usuario.setPhoto(documentSnapshot.getString("photo_user"));
                                     loadingBar.dismiss();
-                                    startActivity(new Intent(Login_Activity.this,Menu_Activity.class));
-                                    //startActivity(new Intent(LoginActivity.this, OlvidePassword.class).putExtra("data", (Serializable) usuario));
+                                    //startActivity(new Intent(Login_Activity.this,Menu_Activity.class));
+                                    startActivity(new Intent(Login_Activity.this, Menu_Activity.class).putExtra("usser_data",usuario));
                                     finish();
                                     //message("El usuario es: "+ usuario.getNombre() + "\nCon el dni : "+ usuario.getDni());
                                 }

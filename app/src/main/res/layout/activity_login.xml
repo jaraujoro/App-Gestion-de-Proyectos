@@ -50,6 +50,7 @@
                 <EditText
                     android:id="@+id/editTextEmail"
                     style="@style/modifiedEditText"
+                    android:drawableStart="@drawable/ic_baseline_person_24"
                     android:hint="Correo Electrónico"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
@@ -59,11 +60,14 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputPassword"
                 style="@style/parent"
-                android:layout_marginTop="@dimen/loginViewsMargin">
+                android:layout_marginTop="@dimen/loginViewsMargin"
+                app:passwordToggleEnabled="true">
 
                 <EditText
                     android:id="@+id/editTextPassword"
                     style="@style/modifiedEditText"
+                    android:drawableStart="@drawable/ic_baseline_lock_24"
+                    android:drawableEnd="@drawable/ic_baseline_visibility_off_24"
                     android:hint="Contraseña"
                     android:inputType="textPassword"
                     android:maxLines="1"
@@ -78,7 +82,7 @@
                 android:onClick="OnClickForgetPassword"
                 android:text="¿Olvidaste tu contraseña?"
                 android:textColor="@color/primaryTextColor"
-                android:textSize="@dimen/newsMoreTextSize" />x
+                android:textSize="15dp" />
 
             <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
                 android:id="@+id/btnOlvidePassword"
@@ -168,7 +172,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginRight="11dp"
         android:layout_marginBottom="30dp"
-        android:onClick="OnClickRegister"
+        android:onClick="OnClickRegister2"
         android:src="@drawable/ic_add_img" />
 
 </RelativeLayout>
