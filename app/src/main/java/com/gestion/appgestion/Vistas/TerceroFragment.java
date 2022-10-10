@@ -35,21 +35,23 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class TerceroFragment extends Fragment implements View.OnClickListener {
 
 
-    Button btn_loading_photo;
-    CircleImageView photo_preview;
+    private Button btn_loading_photo;
+    private CircleImageView photo_preview;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
-    StorageReference storageReference;
-    String storage_path = "user_photo/";
+    private StorageReference storageReference;
+    private String storage_path = "user_photo/";
     private static final int COD_SEL_IMAGE = 300;
     private Uri image_url;
-    String photo = "photo";
-    ProgressDialog loadingBar;
-    Usuario usuario;
-
+    private String photo = "photo";
+    private ProgressDialog loadingBar;
+    private Usuario usuario = new Usuario();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getArguments()!=null){
+            usuario = (Usuario) getArguments().getSerializable("data_usser");
+        }
     }
 
     @Override
@@ -61,7 +63,13 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
+        Toast.makeText(getActivity(),":" + usuario.getNombre(), Toast.LENGTH_SHORT).show();
+        loadUsserData();
         return view;
+    }
+
+    public void loadUsserData(){
+        Picasso.get().load(usuario.getPhoto()).into(photo_preview);
     }
 
     @Override
@@ -78,15 +86,15 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
         if(resultCode == RESULT_OK){
             if (requestCode == COD_SEL_IMAGE){
                 image_url = data.getData();
-                subirPhoto(image_url);
+                uploadPhoto(image_url);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void subirPhoto(Uri image_url) {
+    private void uploadPhoto(Uri image_url) {
         progress("Actualizando foto de perfil....");
-        String rute_storage_photo = storage_path+""+photo+""+firebaseAuth.getUid();
+        String rute_storage_photo = storage_path+" "+photo+" "+firebaseAuth.getUid();
         StorageReference riversRef = storageReference.child(rute_storage_photo);
         riversRef.putFile(image_url).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -102,7 +110,10 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
                             HashMap<String, Object> map = new HashMap<>();
                             map.put("photo_user", download_uri);
                             firebaseFirestore.collection("usuario").document(id).update(map);
-                            DocumentReference docRef = firebaseFirestore.collection("usuario").document(id);
+                            Picasso.get().load(usuario.getPhoto()).into(photo_preview);
+                            loadingBar.dismiss();
+                            message("Foto Actualizada.");
+                            /*DocumentReference docRef = firebaseFirestore.collection("usuario").document(id);
                             docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -111,7 +122,7 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
                                     loadingBar.dismiss();
                                     message("Foto Actualizada.");
                                 }
-                            });
+                            });*/
                         }
                     });
                 }

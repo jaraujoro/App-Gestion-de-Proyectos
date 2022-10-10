@@ -15,6 +15,15 @@ public class Usuario  implements Serializable {
         //this user class here
     }
 
+    public Usuario(String id, String nombre, String dni, String numero_telefono, String email, String photo) {
+        this.id = id;
+        this.nombre = nombre;
+        this.dni = dni;
+        this.numero_telefono = numero_telefono;
+        this.email = email;
+        this.photo = photo;
+    }
+
     public String getPhoto() {
         return photo;
     }

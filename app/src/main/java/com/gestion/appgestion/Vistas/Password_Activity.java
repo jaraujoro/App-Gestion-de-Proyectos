@@ -38,13 +38,13 @@ public class Password_Activity extends AppCompatActivity  implements  View.OnCli
     public void OnClickLoginBack(View view){ //retrocede actividades con animaciones
         startActivity(new Intent(this, Login_Activity.class));
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
-
+        finishAffinity();
     }
 
     public void OnClickRegisterBack(View view){
         startActivity(new Intent(this, Register_Activity.class));
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
-
+        finishAffinity();
     }
 
 
@@ -53,14 +53,14 @@ public class Password_Activity extends AppCompatActivity  implements  View.OnCli
         if(btnForgetPassword == view){
             String email = txtcorreo.getEditText().getText().toString();
             if(!email.isEmpty()){
-                progreso_envio_correo(email);
+                sendPasswordResetEmail(email);
             }else{
                 Toast.makeText(getApplicationContext(),"Complete todos los campos.",Toast.LENGTH_LONG).show();
             }
         }
     }
     //referencias https://www.geeksforgeeks.org/how-to-change-password-of-user-in-android-using-firebase/
-    private void progreso_envio_correo(String email) { //evento progress bar y recuperar contraseña
+    private void sendPasswordResetEmail(String email) { //evento progress bar y recuperar contraseña
         loadingBar=new ProgressDialog(this);
         loadingBar.setMessage("Enviando Email....");
         loadingBar.setCanceledOnTouchOutside(false);

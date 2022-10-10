@@ -48,13 +48,15 @@ public class Register_Activity extends AppCompatActivity implements  View.OnClic
     }
 
     public void onLoginClickBack1(View view){ //retrocede actividades con animaciones
-        startActivity(new Intent(this, Login_Activity.class));
+        startActivity(new Intent(getApplicationContext(), Login_Activity.class));
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
+        finishAffinity();
     }
 
     public void onLoginClickBack2(View view){ //retrocede actividades con animaciones
-        startActivity(new Intent(this, Login_Activity.class));
+        startActivity(new Intent(getApplicationContext(), Login_Activity.class));
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
+        finishAffinity();
     }
 
     public void message(String mensaje){
@@ -104,7 +106,7 @@ public class Register_Activity extends AppCompatActivity implements  View.OnClic
                             message("Los datos se almacenaron correctamente.");
                             loadingBar.dismiss();
                             firebaseAuth.signOut();
-                            startActivity(new Intent(Register_Activity.this, Login_Activity.class));
+                            startActivity(new Intent(getApplicationContext(), Login_Activity.class));
                             finish();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
