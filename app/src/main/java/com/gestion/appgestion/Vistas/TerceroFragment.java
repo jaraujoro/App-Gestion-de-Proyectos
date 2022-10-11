@@ -16,10 +16,13 @@ import android.widget.Button;
 import android.widget.Toast;
 import com.gestion.appgestion.Modelo.Usuario;
 import com.gestion.appgestion.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -34,8 +37,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TerceroFragment extends Fragment implements View.OnClickListener {
 
-
-    private Button btn_loading_photo;
+    private Button btn_loading_photo,btnActualizar;
     private CircleImageView photo_preview;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
@@ -45,12 +47,15 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
     private Uri image_url;
     private String photo = "photo";
     private ProgressDialog loadingBar;
-    private Usuario usuario = new Usuario();
+    private String id_usser;
+    private TextInputLayout txtNombre,txtDni,txtEmail,txtPassword,txtNumeroTelefono;
+    private FirebaseUser firebaseUser;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments()!=null){
-            usuario = (Usuario) getArguments().getSerializable("data_usser");
+            id_usser = getArguments().getString("id_usser");
         }
     }
 
@@ -59,17 +64,53 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
         View view =inflater.inflate(R.layout.fragment_tercero, container, false);
         btn_loading_photo = view.findViewById(R.id.btn_loading_photo);
         photo_preview = view.findViewById(R.id.photo_preview);
+        txtNombre         = view.findViewById(R.id.textInputName2);
+        txtDni            = view.findViewById(R.id.textInputDni2);
+        txtNumeroTelefono = view.findViewById(R.id.textInputMobile2);
+        txtEmail          = view.findViewById(R.id.textInputEmail2);
+        txtPassword       = view.findViewById(R.id.textInputPassword2);
+        btnActualizar     = view.findViewById(R.id.btnActualizar);
+        btnActualizar.setOnClickListener(this);
         btn_loading_photo.setOnClickListener(this);
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseAuth = FirebaseAuth.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference();
-        Toast.makeText(getActivity(),":" + usuario.getNombre(), Toast.LENGTH_SHORT).show();
-        loadUsserData();
+        firebaseFirestore  = FirebaseFirestore.getInstance();
+        firebaseAuth       = FirebaseAuth.getInstance();
+        storageReference   = FirebaseStorage.getInstance().getReference();
+        firebaseUser       = firebaseAuth.getCurrentUser();
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadUsserData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadUsserData();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        loadUsserData();
+    }
+
     public void loadUsserData(){
-        Picasso.get().load(usuario.getPhoto()).into(photo_preview);
+        DocumentReference docRef = firebaseFirestore.collection("usuario").document(id_usser);
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(!documentSnapshot.getString("photo_user").equals("")){
+                    Picasso.get().load(documentSnapshot.getString("photo_user")).into(photo_preview);
+                    txtNombre.getEditText().setText(documentSnapshot.getString("nombre"));
+                    txtDni.getEditText().setText(documentSnapshot.getString("dni"));
+                    txtEmail.getEditText().setText(documentSnapshot.getString("email"));
+                    txtPassword.getEditText().setText(documentSnapshot.getString("password"));
+                    txtNumeroTelefono.getEditText().setText(documentSnapshot.getString("numero_telefono"));
+                }
+            }
+        });
     }
 
     @Override
@@ -78,6 +119,9 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
             Intent i = new Intent(Intent.ACTION_PICK);
             i.setType("image/*");
             startActivityForResult(i,COD_SEL_IMAGE);
+        }
+        if(btnActualizar == event){
+            uptdateDataUser();
         }
     }
 
@@ -90,6 +134,44 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void uptdateDataUser(){
+        String nombre = txtNombre.getEditText().getText().toString().trim();
+        String dni    = txtDni.getEditText().getText().toString().trim();
+        String numero_telefono = txtNumeroTelefono.getEditText().getText().toString().trim();
+        String email = txtEmail.getEditText().getText().toString().trim();
+        if(nombre.isEmpty() || dni.isEmpty() || numero_telefono.isEmpty() || email.isEmpty()){
+            message("No se aceptan datos nulos.");
+        }else {
+            progress("Actualizando datos....");
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("nombre", nombre);
+            map.put("dni", dni);
+            map.put("numero_telefono", numero_telefono);
+            map.put("email", email);
+            firebaseFirestore.collection("usuario").document(id_usser).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    loadingBar.dismiss();
+                    message("Datos Actualizados.");
+                    /*firebaseUser.sendEmailVerification()
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        message("revise gaaa");
+                                    }
+                                }
+                            });*/
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    message("error al actualizar los datos.");
+                }
+            });
+        }
     }
 
     private void uploadPhoto(Uri image_url) {
@@ -105,24 +187,12 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
                     uriTask.addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            String id = firebaseAuth.getUid();
                             String download_uri = uri.toString();
                             HashMap<String, Object> map = new HashMap<>();
                             map.put("photo_user", download_uri);
-                            firebaseFirestore.collection("usuario").document(id).update(map);
-                            Picasso.get().load(usuario.getPhoto()).into(photo_preview);
+                            firebaseFirestore.collection("usuario").document(id_usser).update(map);
                             loadingBar.dismiss();
                             message("Foto Actualizada.");
-                            /*DocumentReference docRef = firebaseFirestore.collection("usuario").document(id);
-                            docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                                @Override
-                                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                                    String url_photo = documentSnapshot.getString("photo_user");
-                                    Picasso.get().load(url_photo).into(photo_preview);
-                                    loadingBar.dismiss();
-                                    message("Foto Actualizada.");
-                                }
-                            });*/
                         }
                     });
                 }
@@ -130,7 +200,7 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getActivity(), "Error al cargar foto", Toast.LENGTH_SHORT).show();
+                message("error al subir la foto");
             }
         });
     }

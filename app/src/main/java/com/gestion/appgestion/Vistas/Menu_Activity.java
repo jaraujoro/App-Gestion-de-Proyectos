@@ -1,42 +1,35 @@
 package com.gestion.appgestion.Vistas;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
-
-import com.gestion.appgestion.Modelo.Usuario;
 import com.gestion.appgestion.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Menu_Activity extends AppCompatActivity {
 
-    PrimerFragment primero = new PrimerFragment();
-    SegundoFragment segundo = new SegundoFragment();
-    TerceroFragment tercero = new TerceroFragment();
-    private FirebaseAuth firebaseAuth;
-    Usuario usuario = new Usuario();
+    private PrimerFragment  primero = new PrimerFragment();
+    private SegundoFragment segundo = new SegundoFragment();
+    private TerceroFragment tercero = new TerceroFragment();
+    FirebaseFirestore       firebaseFirestore;
+    FirebaseAuth            firebaseAuth;
+    private String          id_usser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+        firebaseFirestore = FirebaseFirestore.getInstance();
         BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(itemSelected);
         firebaseAuth = FirebaseAuth.getInstance();
         if(getIntent()!=null){
-            usuario = (Usuario) getIntent().getSerializableExtra("data_usser");
+            id_usser = getIntent().getStringExtra("id_usser");
         }
         loadFragment(primero);
     }
@@ -61,7 +54,7 @@ public class Menu_Activity extends AppCompatActivity {
 
     public void loadFragment(Fragment fragment){
         Bundle bundle = new Bundle();
-        bundle.putSerializable("data_usser", usuario);
+        bundle.putString("id_usser",id_usser);
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container,fragment);

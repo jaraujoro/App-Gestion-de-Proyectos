@@ -34,13 +34,14 @@ import java.io.Serializable;
 
 
 public class Login_Activity extends AppCompatActivity implements  View.OnClickListener{
-    TextInputLayout textInputEmail,textInputPassword;
-    Button btnLogin;
+    private TextInputLayout textInputEmail,textInputPassword;
+    private Button btnLogin;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore;
-    ProgressDialog loadingBar;
-    Usuario usuario;
-    String id_usser;
+    private ProgressDialog loadingBar;
+    private Usuario usuario;
+    private String id_usser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +63,8 @@ public class Login_Activity extends AppCompatActivity implements  View.OnClickLi
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if(currentUser != null){
             id_usser = firebaseAuth.getCurrentUser().getUid();
-            getDataUsser(id_usser);
+            startActivity(new Intent(Login_Activity.this, Menu_Activity.class).putExtra("id_usser",id_usser));
+            finish();
         }
     }
 
@@ -109,8 +111,9 @@ public class Login_Activity extends AppCompatActivity implements  View.OnClickLi
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             id_usser = firebaseAuth.getCurrentUser().getUid();
-                            getDataUsser(id_usser);
                             loadingBar.dismiss();
+                            startActivity(new Intent(Login_Activity.this, Menu_Activity.class).putExtra("id_usser",id_usser));
+                            finish();
                         } else {
                             loadingBar.dismiss();
                             message("Datos incorrectos, Verifique su correo o contraseña");
@@ -119,9 +122,9 @@ public class Login_Activity extends AppCompatActivity implements  View.OnClickLi
                 });
             }
         }
-
     }
 
+    /*
     public void getDataUsser(String id_usser){
         DocumentReference docRef = firestore.collection("usuario").document(id_usser);
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -137,7 +140,7 @@ public class Login_Activity extends AppCompatActivity implements  View.OnClickLi
                 finish();
             }
         });
-    }
+    }*/
 }
 
 

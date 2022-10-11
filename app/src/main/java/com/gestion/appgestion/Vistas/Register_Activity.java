@@ -24,11 +24,11 @@ import java.util.Map;
 
 
 public class Register_Activity extends AppCompatActivity implements  View.OnClickListener{
-    TextInputLayout txtNombre,txtDni,txtEmail,txtPassword,txtNumeroTelefono;
-    Button btnRegistrar;
-    FirebaseAuth firebaseAuth;
-    FirebaseFirestore firestore;
-    ProgressDialog loadingBar;
+    private TextInputLayout txtNombre,txtDni,txtEmail,txtPassword,txtNumeroTelefono;
+    private Button btnRegistrar;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firestore;
+    private ProgressDialog loadingBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -36,16 +36,122 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/perfil"
+                    android:visibility="visible"
                     app:civ_border_width="1dp" />
                 <Button
                     android:id="@+id/btn_loading_photo"
-                    android:layout_width="31dp"
+                    android:layout_width="30dp"
                     android:layout_height="31dp"
                     android:layout_gravity="end"
-                    android:layout_marginTop="124dp"
+                    android:layout_marginTop="125dp"
                     android:foreground="@drawable/ic_baseline_camera_alt_24" />
-
             </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/whiteTextColor"
+                app:cardCornerRadius="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputName2"
+                        style="@style/parent"
+                        android:layout_marginTop="@dimen/loginViewsMargin">
+
+                        <EditText
+                            android:id="@+id/editTextName"
+                            style="@style/modifiedEditText"
+                            android:hint="Nombre(s)"
+                            android:drawableStart="@drawable/ic_baseline_person_24"
+                            android:inputType="textPersonName"
+                            android:maxLines="1"
+                            android:textSize="16dp"
+                            android:maxLength="60"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputDni2"
+                        style="@style/parent"
+                        android:layout_marginTop="@dimen/loginViewsMargin">
+
+                        <EditText
+                            android:id="@+id/editTextDni"
+                            style="@style/modifiedEditText"
+                            android:hint="Nº Documento"
+                            android:drawableStart="@drawable/ic_baseline_credit_card_24"
+                            android:inputType="number"
+                            android:maxLines="1"
+                            android:textSize="16dp"
+                            android:maxLength="8"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputEmail2"
+                        style="@style/parent"
+                        android:layout_marginTop="@dimen/loginViewsMargin">
+
+                        <EditText
+                            android:id="@+id/editTextEmail"
+                            style="@style/modifiedEditText"
+                            android:hint="Correo Electrónico"
+                            android:inputType="textEmailAddress"
+                            android:drawableStart="@drawable/ic_baseline_email_24"
+                            android:maxLines="1"
+                            android:textSize="16dp"
+                            android:maxLength="60"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputMobile2"
+                        style="@style/parent"
+                        android:layout_marginTop="@dimen/loginViewsMargin">
+
+                        <EditText
+                            android:id="@+id/editTextMobile"
+                            style="@style/modifiedEditText"
+                            android:hint="Número Telefónico"
+                            android:drawableStart="@drawable/ic_baseline_phone_iphone_24"
+                            android:inputType="phone"
+                            android:maxLines="1"
+                            android:textSize="16dp"
+                            android:maxLength="9"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputPassword2"
+                        style="@style/parent"
+                        android:layout_marginTop="@dimen/loginViewsMargin"
+                        app:passwordToggleEnabled="true"
+                        >
+
+                        <EditText
+                            android:id="@+id/editTextPassword"
+                            style="@style/modifiedEditText"
+                            android:hint="Contraseña"
+                            android:drawableStart="@drawable/ic_baseline_lock_24"
+                            android:drawableEnd="@drawable/ic_baseline_visibility_off_24"
+                            android:inputType="textPassword"
+                            android:maxLines="1"
+                            android:textSize="16dp"
+                            android:maxLength="40"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+                        android:id="@+id/btnActualizar"
+                        style="@style/loginButton"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/loginViewsMargin"
+                        android:text="Actualizar "
+                        app:initialCornerAngle="27dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
