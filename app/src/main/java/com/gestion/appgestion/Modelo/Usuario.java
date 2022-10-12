@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Usuario  implements Serializable {
 
-    private String id;
+    private int id;
     private String nombre;
     private String dni;
     private String numero_telefono;
@@ -15,7 +15,7 @@ public class Usuario  implements Serializable {
         //this user class here
     }
 
-    public Usuario(String id, String nombre, String dni, String numero_telefono, String email, String photo) {
+    public Usuario(int id, String nombre, String dni, String numero_telefono, String email, String photo) {
         this.id = id;
         this.nombre = nombre;
         this.dni = dni;
@@ -32,11 +32,11 @@ public class Usuario  implements Serializable {
         this.photo = photo;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

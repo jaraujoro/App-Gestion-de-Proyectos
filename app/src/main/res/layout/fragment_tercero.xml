@@ -73,7 +73,7 @@
                             android:inputType="textPersonName"
                             android:maxLines="1"
                             android:textSize="16dp"
-                            android:maxLength="60"/>
+                            android:maxLength="40"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
