@@ -76,6 +76,7 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
         firebaseAuth       = FirebaseAuth.getInstance();
         storageReference   = FirebaseStorage.getInstance().getReference();
         firebaseUser       = firebaseAuth.getCurrentUser();
+        loadUsserData();
         return view;
     }
 
@@ -103,12 +104,12 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if(!documentSnapshot.getString("photo_user").equals("")){
                     Picasso.get().load(documentSnapshot.getString("photo_user")).into(photo_preview);
-                    txtNombre.getEditText().setText(documentSnapshot.getString("nombre"));
-                    txtDni.getEditText().setText(documentSnapshot.getString("dni"));
-                    txtEmail.getEditText().setText(documentSnapshot.getString("email"));
-                    txtPassword.getEditText().setText(documentSnapshot.getString("password"));
-                    txtNumeroTelefono.getEditText().setText(documentSnapshot.getString("numero_telefono"));
                 }
+                txtNombre.getEditText().setText(documentSnapshot.getString("nombre"));
+                txtDni.getEditText().setText(documentSnapshot.getString("dni"));
+                txtEmail.getEditText().setText(documentSnapshot.getString("email"));
+                txtPassword.getEditText().setText(documentSnapshot.getString("password"));
+                txtNumeroTelefono.getEditText().setText(documentSnapshot.getString("numero_telefono"));
             }
         });
     }
