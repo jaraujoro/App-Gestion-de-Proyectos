@@ -16,4 +16,5 @@
     <color name="grenn_normal">#044a42</color>
     <color name="green_light">#3a9188</color>
     <color name="green_light_2">#FFFFFF</color>
+    <color name="taskcolor">#03a9f4</color>
 </resources>

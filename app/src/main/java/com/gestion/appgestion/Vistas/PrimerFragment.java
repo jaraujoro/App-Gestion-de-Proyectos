@@ -36,7 +36,7 @@ public class PrimerFragment extends Fragment {
     //https://www.youtube.com/watch?v=Mne2SrtySME
     public void listTask(View view){
         tareaList = new ArrayList<>();
-        tareaList.add(new Tarea(1,"Test","Pendiente","Probando listView"));
+        tareaList.add(new Tarea(1,"Test para todos aqueelos quewefjnwefwefjnwenfjewjnwefewwefw ","Pendiente","Probando listView paras jasndjasdasjdnjasdadsadasdasdasdsadasadsda"));
         tareaList.add(new Tarea(2,"Test","Pendiente","Probando listView"));
         tareaList.add(new Tarea(3,"Test","Pendiente","Probando listView"));
         tareaList.add(new Tarea(4,"Test","Pendiente","Probando listView"));

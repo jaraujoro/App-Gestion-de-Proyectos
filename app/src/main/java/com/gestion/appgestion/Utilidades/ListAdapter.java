@@ -54,15 +54,15 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
        TextView titulo,descripcion,estado;
        ViewHolder(View view){
            super(view);
-           imageView = view.findViewById(R.id.image_cardview);
-           titulo = view.findViewById(R.id.tittle_element);
-           descripcion = view.findViewById(R.id.descripcion_element);
-           estado = view.findViewById(R.id.task_status);
+           imageView = view.findViewById(R.id.task_image);
+           titulo = view.findViewById(R.id.task_tittle);
+           descripcion = view.findViewById(R.id.task_descripcion);
+           //estado = view.findViewById(R.id.task_status);
        }
        void bindData(final Tarea item ){
             titulo.setText(item.getTitulo());
             descripcion.setText(item.getDescripcion());
-            estado.setText(item.getEstado());
+
        }
     }
 }
