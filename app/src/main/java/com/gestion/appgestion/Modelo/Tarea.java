@@ -6,10 +6,9 @@ public class Tarea {
     private String estado;
     private String descripcion;
 
-    public Tarea(int id, String titulo, String estado, String descripcion) {
+    public Tarea(int id, String titulo,String descripcion) {
         this.id = id;
         this.titulo = titulo;
-        this.estado = estado;
         this.descripcion = descripcion;
     }
 
