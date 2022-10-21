@@ -14,6 +14,9 @@ import com.gestion.appgestion.R;
 import com.google.common.util.concurrent.ListenableFutureTask;
 
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
@@ -38,12 +41,16 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     @NonNull
     @Override
     public ListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.list_elements,null);
+        View view = layoutInflater.inflate(R.layout.list_elements,null,false);
+        //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_elements, parent, false);
         return new ListAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ListAdapter.ViewHolder holder, int position) {
+        Tarea tarea  = listTarea.get(position);
+        holder.txt_titulo.setText(tarea.getTitulo());
+        holder.txt_descripcion.setText(tarea.getDescripcion());
         holder.bindData(listTarea.get(position));
     }
 
@@ -57,17 +64,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-       ImageView imageView;
-       TextView titulo,descripcion;
+       TextView txt_titulo,txt_descripcion;
        ViewHolder(View view){
            super(view);
-           imageView = view.findViewById(R.id.task_image);
-           titulo = view.findViewById(R.id.task_tittle);
-           descripcion = view.findViewById(R.id.task_descripcion);
+           txt_titulo      = (TextView) view.findViewById(R.id.titulo);
+           txt_descripcion = (TextView) view.findViewById(R.id.descripcion);
        }
        void bindData(final Tarea item ){
-            titulo.setText(item.getTitulo());
-            descripcion.setText(item.getDescripcion());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

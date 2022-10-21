@@ -80,24 +80,6 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        loadUsserData();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        loadUsserData();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        loadUsserData();
-    }
-
     public void loadUsserData(){
         DocumentReference docRef = firebaseFirestore.collection("usuario").document(id_usser);
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -156,15 +138,6 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
                 public void onSuccess(Void unused) {
                     loadingBar.dismiss();
                     message("Datos Actualizados.");
-                    /*firebaseUser.sendEmailVerification()
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        message("revise gaaa");
-                                    }
-                                }
-                            });*/
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

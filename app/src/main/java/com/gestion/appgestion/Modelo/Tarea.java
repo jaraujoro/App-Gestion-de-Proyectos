@@ -1,30 +1,20 @@
 package com.gestion.appgestion.Modelo;
 
 public class Tarea {
-    private int id;
+    private String id;
     private String titulo;
     private String estado;
     private String descripcion;
 
-    public Tarea(int id, String titulo,String descripcion) {
-        this.id = id;
-        this.titulo = titulo;
-        this.descripcion = descripcion;
+    public Tarea(){
+
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -44,5 +34,11 @@ public class Tarea {
         this.estado = estado;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
 
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 }
