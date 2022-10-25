@@ -6,9 +6,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.MenuItem;
+import com.gestion.appgestion.Modelo.Usuario;
 import com.gestion.appgestion.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Menu_Activity extends AppCompatActivity {
@@ -16,10 +18,10 @@ public class Menu_Activity extends AppCompatActivity {
     private PrimerFragment  primero = new PrimerFragment();
     private SegundoFragment segundo = new SegundoFragment();
     private TerceroFragment tercero = new TerceroFragment();
-    FirebaseFirestore       firebaseFirestore;
-    FirebaseAuth            firebaseAuth;
-    private String          id_usser;
-
+    private FirebaseFirestore  firebaseFirestore;
+    private Usuario usuario;
+    private String  id_usser;
+    private Bundle bundle = new Bundle();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,12 +29,13 @@ public class Menu_Activity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(itemSelected);
-        firebaseAuth = FirebaseAuth.getInstance();
         if(getIntent()!=null){
             id_usser = getIntent().getStringExtra("id_usser");
         }
+        getDataUsser(id_usser);
         loadFragment(primero);
     }
+
 
     private final BottomNavigationView.OnNavigationItemSelectedListener itemSelected = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -52,9 +55,24 @@ public class Menu_Activity extends AppCompatActivity {
         }
     };
 
+    public void getDataUsser(String id_usser){
+        firebaseFirestore.collection("usuario").document(id_usser).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                usuario = new Usuario();
+                usuario.setId(documentSnapshot.getString("id"));
+                usuario.setNombre(documentSnapshot.getString("nombre"));
+                usuario.setDni(documentSnapshot.getString("dni"));
+                usuario.setNumerotelefono(documentSnapshot.getString("numerotelefono"));
+                usuario.setEmail(documentSnapshot.getString("email"));
+                usuario.setPhoto(documentSnapshot.getString("photouser"));
+                usuario.setPassword(documentSnapshot.getString("password"));
+                bundle.putSerializable("usser_class",usuario);
+            }
+        });
+    }
+
     public void loadFragment(Fragment fragment){
-        Bundle bundle = new Bundle();
-        bundle.putString("id_usser",id_usser);
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container,fragment);

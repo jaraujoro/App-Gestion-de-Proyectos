@@ -1,6 +1,8 @@
 package com.gestion.appgestion.Modelo;
 
-public class Tarea {
+import java.io.Serializable;
+
+public class Tarea implements Serializable {
     private String id;
     private String titulo;
     private String estado;

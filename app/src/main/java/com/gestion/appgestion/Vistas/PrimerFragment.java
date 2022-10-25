@@ -1,32 +1,25 @@
 package com.gestion.appgestion.Vistas;
 
-import android.annotation.SuppressLint;
+
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.InputType;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.gestion.appgestion.Modelo.Tarea;
+import com.gestion.appgestion.Modelo.Usuario;
 import com.gestion.appgestion.R;
 import com.gestion.appgestion.Utilidades.ListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,28 +28,16 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.squareup.picasso.Picasso;
-
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class PrimerFragment extends Fragment implements View.OnClickListener {
@@ -64,21 +45,24 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
     FloatingActionButton button_float;
     List<Tarea> tareaList;
     private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore firestore;
+    private FirebaseFirestore firebaseFirestore;
     private ProgressDialog loadingBar;
+    Usuario usuario;
+    private String id;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    //https://www.youtube.com/watch?v=sYHKhwoVU4Q barra de navegación arriba
-    @Override
+    @Override //https://www.youtube.com/watch?v=sYHKhwoVU4Q barra de navegación arriba
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_primer, container, false);
         button_float = view.findViewById(R.id.button_float);
         button_float.setOnClickListener(this);
         firebaseAuth = FirebaseAuth.getInstance();
-        firestore = FirebaseFirestore.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        id = firebaseAuth.getCurrentUser().getUid();
         listTask(view);
         return  view;
     }
@@ -94,7 +78,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
     public void listTask(View view){//https://www.youtube.com/watch?v=Mne2SrtySME
         progress("Cargando Datos...");
         tareaList = new ArrayList<>();
-        firestore.collection("tarea").orderBy("titulo").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        firebaseFirestore.collection("tarea").whereEqualTo("idusuario",id).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
@@ -150,6 +134,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
                     .show();
             Button positive = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             positive.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onClick(View view) {
                     String titulo_tarea      = titulo.getText().toString().trim();
@@ -166,18 +151,18 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void registerTask(String task, String description){
-        String id = firebaseAuth.getCurrentUser().getUid();
         Map<String, Object> map = new HashMap<>();
-        map.put("id_usuario", id);
+        map.put("idusuario", id);
         map.put("titulo", task);
         map.put("descripcion", description);
-        map.put("fecha_inicio", fecha());
-        map.put("fecha_fin", "");
+        map.put("fechainicio", fecha());
+        map.put("fechafin", "");
         map.put("asignado", "");
         map.put("estado", "Pendiente");
         map.put("activo", "1");
-        firestore.collection("tarea").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        firebaseFirestore.collection("tarea").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 listTask(getView());
@@ -197,10 +182,10 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
         DateTimeFormatter f = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String currentDate = localDate.format(f);
         return currentDate;
-        //Calendar calendar = Calendar.getInstance();
-        //SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
-        //String currentDate = localDate.formato.format(calendar.getTime());
-        //String date = DateFormat.getDateInstance().format(calendar.getTime());
-        //return date;
     }}
 }
+//Calendar calendar = Calendar.getInstance();
+//SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
+//String currentDate = localDate.formato.format(calendar.getTime());
+//String date = DateFormat.getDateInstance().format(calendar.getTime());
+//return date;

@@ -16,13 +16,11 @@ import android.widget.Button;
 import android.widget.Toast;
 import com.gestion.appgestion.Modelo.Usuario;
 import com.gestion.appgestion.R;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -47,15 +45,14 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
     private Uri image_url;
     private String photo = "photo";
     private ProgressDialog loadingBar;
-    private String id_usser;
     private TextInputLayout txtNombre,txtDni,txtEmail,txtPassword,txtNumeroTelefono;
-    private FirebaseUser firebaseUser;
+    private Usuario usuario;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments()!=null){
-            id_usser = getArguments().getString("id_usser");
+            usuario = (Usuario) getArguments().getSerializable("usser_class");
         }
     }
 
@@ -75,23 +72,33 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
         firebaseFirestore  = FirebaseFirestore.getInstance();
         firebaseAuth       = FirebaseAuth.getInstance();
         storageReference   = FirebaseStorage.getInstance().getReference();
-        firebaseUser       = firebaseAuth.getCurrentUser();
-        loadUsserData();
+        loadData();
         return view;
     }
 
+    public void loadData(){
+        txtNombre.getEditText().setText(usuario.getNombre());
+        txtDni.getEditText().setText(usuario.getDni());
+        txtEmail.getEditText().setText(usuario.getEmail());
+        txtPassword.getEditText().setText(usuario.getPassword());
+        txtNumeroTelefono.getEditText().setText(usuario.getNumerotelefono());
+        if(!usuario.getPhoto().equals("")){
+            Picasso.get().load(usuario.getPhoto()).into(photo_preview);
+        }
+    }
+
     public void loadUsserData(){
-        DocumentReference docRef = firebaseFirestore.collection("usuario").document(id_usser);
+        DocumentReference docRef = firebaseFirestore.collection("usuario").document(usuario.getId());
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if(!documentSnapshot.getString("photo_user").equals("")){
-                    Picasso.get().load(documentSnapshot.getString("photo_user")).into(photo_preview);
+                    Picasso.get().load(documentSnapshot.getString("photouser")).into(photo_preview);
                 }
                 txtNombre.getEditText().setText(documentSnapshot.getString("nombre"));
                 txtDni.getEditText().setText(documentSnapshot.getString("dni"));
                 txtEmail.getEditText().setText(documentSnapshot.getString("email"));
                 txtPassword.getEditText().setText(documentSnapshot.getString("password"));
-                txtNumeroTelefono.getEditText().setText(documentSnapshot.getString("numero_telefono"));
+                txtNumeroTelefono.getEditText().setText(documentSnapshot.getString("numerotelefono"));
             }
         });
     }
@@ -131,9 +138,9 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
             HashMap<String, Object> map = new HashMap<>();
             map.put("nombre", nombre);
             map.put("dni", dni);
-            map.put("numero_telefono", numero_telefono);
+            map.put("numerotelefono", numero_telefono);
             map.put("email", email);
-            firebaseFirestore.collection("usuario").document(id_usser).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+            firebaseFirestore.collection("usuario").document(usuario.getId()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
                     loadingBar.dismiss();
@@ -163,10 +170,12 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
                         public void onSuccess(Uri uri) {
                             String download_uri = uri.toString();
                             HashMap<String, Object> map = new HashMap<>();
-                            map.put("photo_user", download_uri);
-                            firebaseFirestore.collection("usuario").document(id_usser).update(map);
+                            map.put("photouser", download_uri);
+                            firebaseFirestore.collection("usuario").document(usuario.getId()).update(map);
+                            Picasso.get().load(download_uri).into(photo_preview);
                             loadingBar.dismiss();
                             message("Foto Actualizada.");
+
                         }
                     });
                 }

@@ -4,39 +4,49 @@ import java.io.Serializable;
 
 public class Usuario  implements Serializable {
 
-    private int id;
+    private String id;
     private String nombre;
     private String dni;
-    private String numero_telefono;
+    private String numerotelefono;
     private String email;
-    private String photo;
+    private String photouser;
+    private String password;
 
     public Usuario(){
         //this user class here
     }
 
-    public Usuario(int id, String nombre, String dni, String numero_telefono, String email, String photo) {
+    public Usuario(String id, String nombre, String dni, String numerotelefono, String email, String photouser, String password) {
         this.id = id;
         this.nombre = nombre;
         this.dni = dni;
-        this.numero_telefono = numero_telefono;
+        this.numerotelefono = numerotelefono;
         this.email = email;
-        this.photo = photo;
+        this.photouser = photouser;
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getPhoto() {
-        return photo;
+        return photouser;
     }
 
     public void setPhoto(String photo) {
-        this.photo = photo;
+        this.photouser = photo;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -56,12 +66,12 @@ public class Usuario  implements Serializable {
         this.dni = dni;
     }
 
-    public String getNumero_telefono() {
-        return numero_telefono;
+    public String getNumerotelefono() {
+        return numerotelefono;
     }
 
-    public void setNumero_telefono(String numero_telefono) {
-        this.numero_telefono = numero_telefono;
+    public void setNumerotelefono(String numerotelefono) {
+        this.numerotelefono = numerotelefono;
     }
 
     public String getEmail() {
