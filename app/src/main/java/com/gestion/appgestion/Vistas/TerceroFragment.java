@@ -173,9 +173,9 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
                             map.put("photouser", download_uri);
                             firebaseFirestore.collection("usuario").document(usuario.getId()).update(map);
                             Picasso.get().load(download_uri).into(photo_preview);
+                            usuario.setPhoto(download_uri);
                             loadingBar.dismiss();
                             message("Foto Actualizada.");
-
                         }
                     });
                 }

@@ -28,6 +28,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         app:labelVisibilityMode="selected"
+        app:itemIconTint="#FFFFFF"
         style="@style/BottomNavigation"
 
     />
