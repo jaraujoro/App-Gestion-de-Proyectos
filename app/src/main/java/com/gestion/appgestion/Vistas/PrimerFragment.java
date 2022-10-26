@@ -3,6 +3,7 @@ package com.gestion.appgestion.Vistas;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -95,7 +96,11 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
                 ListAdapter listAdapter = new ListAdapter(tareaList, getContext(), new ListAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(Tarea item) {
-                        message("click al item: " + item.getId());
+                        startActivity(new Intent(getContext(), Detalle_Tarea.class).putExtra("class_tarea",item));
+                        /*Detalle_Tarea nuevoFragmento = new Detalle_Tarea();
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.frame_container, nuevoFragmento);
+                        transaction.commit();*/
                     }
                 });
                 RecyclerView recyclerView = view.findViewById(R.id.listRecycleView);

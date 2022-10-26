@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
                 <item
                     android:id="@+id/option_exit"
-                    android:title="Salir"
+                    android:title="Cerrar Sesión"
                     android:icon="@drawable/exit_to_app_24">
                 </item>
 </menu>
