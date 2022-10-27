@@ -13,7 +13,7 @@ public class Usuario  implements Serializable {
     private String password;
 
     public Usuario(){
-        //this user class here
+
     }
 
     public Usuario(String id, String nombre, String dni, String numerotelefono, String email, String photouser, String password) {
