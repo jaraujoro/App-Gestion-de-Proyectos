@@ -96,10 +96,10 @@ public class Register_Activity extends AppCompatActivity implements  View.OnClic
                     map.put("id", id);
                     map.put("nombre", nombre);
                     map.put("dni", dni);
-                    map.put("numerotelefono",numero_telefono);
+                    map.put("numero_telefono",numero_telefono);
                     map.put("email", email );
                     map.put("password", password);
-                    map.put("photouser", "");
+                    map.put("photo_user", "");
                     firestore.collection("usuario").document(id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {

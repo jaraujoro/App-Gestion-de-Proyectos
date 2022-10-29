@@ -25,9 +25,7 @@ public class Login_Activity extends AppCompatActivity implements  View.OnClickLi
     private TextInputLayout textInputEmail,textInputPassword;
     private Button btnLogin;
     private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore firestore;
     private ProgressDialog loadingBar;
-    private Usuario usuario;
     private String id_usser;
 
     @Override
@@ -38,7 +36,6 @@ public class Login_Activity extends AppCompatActivity implements  View.OnClickLi
         }
         setContentView(R.layout.activity_login);
         firebaseAuth = FirebaseAuth.getInstance();
-        firestore = FirebaseFirestore.getInstance();
         textInputEmail    = findViewById(R.id.textInputEmail);
         textInputPassword = findViewById(R.id.textInputPassword);
         btnLogin          = findViewById(R.id.btnOlvidePassword);

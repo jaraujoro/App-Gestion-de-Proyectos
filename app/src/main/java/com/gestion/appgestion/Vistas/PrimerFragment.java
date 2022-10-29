@@ -4,9 +4,11 @@ package com.gestion.appgestion.Vistas;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,10 +35,15 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,8 +55,11 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private ProgressDialog loadingBar;
-    Usuario usuario;
     private String id;
+
+    public PrimerFragment(){
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +78,12 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
         return  view;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        listTask(getView());
+    }
+
     public void progress(String mensaje){
         loadingBar=new ProgressDialog(getContext());
         loadingBar.setMessage(mensaje);
@@ -77,22 +93,31 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
 
 
     public void listTask(View view){//https://www.youtube.com/watch?v=Mne2SrtySME
-        progress("Cargando Datos...");
         tareaList = new ArrayList<>();
+        DateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
         firebaseFirestore.collection("tarea").whereEqualTo("idusuario",id).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    String id = document.getId();
-                    Tarea tarea = document.toObject(Tarea.class);
-                    tarea.setId(id);
-                    tareaList.add(tarea);
+                    try {
+                        Tarea tarea = new Tarea();
+                        tarea.setId(document.getId());
+                        tarea.setIdusuario(document.getString("idusuario"));
+                        tarea.setTitulo(document.getString("titulo"));
+                        tarea.setDescripcion(document.getString("descripcion"));
+                        tarea.setFecha_creacion(document.getString("fecha_creacion"));
+                        tarea.setFecha_inicio(document.getString("fecha_inicio"));
+                        tarea.setFecha_finalizacion(document.getString("fecha_finalizacion"));
+                        tarea.setEstado(document.getString("estado"));
+                        tareaList.add(tarea);
+                    }catch (Exception exception){
+                        message("error:`"+exception);
+                    }
                 }
             }
         }).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                loadingBar.dismiss();
                 ListAdapter listAdapter = new ListAdapter(tareaList, getContext(), new ListAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(Tarea item) {
@@ -162,11 +187,10 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
         map.put("idusuario", id);
         map.put("titulo", task);
         map.put("descripcion", description);
-        map.put("fechainicio", fecha());
-        map.put("fechafin", "");
-        map.put("asignado", "");
+        map.put("fecha_creacion",fecha());
+        map.put("fecha_inicio", "");
+        map.put("fecha_finalizacion", "");
         map.put("estado", "Pendiente");
-        map.put("activo", "1");
         firebaseFirestore.collection("tarea").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
@@ -189,8 +213,16 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
         return currentDate;
     }}
 }
-//Calendar calendar = Calendar.getInstance();
-//SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
-//String currentDate = localDate.formato.format(calendar.getTime());
-//String date = DateFormat.getDateInstance().format(calendar.getTime());
-//return date;
+/*
+Calendar calendar = Calendar.getInstance();
+SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
+String currentDate = localDate.formato.format(calendar.getTime());
+String date = DateFormat.getDateInstance().format(calendar.getTime());
+return date;
+/*
+ZoneId zona = ZoneId.of("America/Lima");
+LocalDate localDate = LocalDate.now(zona);
+DateTimeFormatter f = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+String currentDate = localDate.format(f);
+return currentDate;
+ */

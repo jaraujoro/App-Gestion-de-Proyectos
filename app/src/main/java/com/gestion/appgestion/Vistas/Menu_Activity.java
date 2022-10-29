@@ -1,6 +1,7 @@
 package com.gestion.appgestion.Vistas;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -8,13 +9,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
 import com.gestion.appgestion.Modelo.Usuario;
 import com.gestion.appgestion.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class Menu_Activity extends AppCompatActivity {
 
@@ -78,21 +83,37 @@ public class Menu_Activity extends AppCompatActivity {
     };
 
     public void getDataUsser(String id_usser){
-        firebaseFirestore.collection("usuario").document(id_usser).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        firebaseFirestore.collection("usuario").document(id_usser).addSnapshotListener( new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                usuario = new Usuario();
+                usuario.setId(value.getString("id"));
+                usuario.setNombre(value.getString("nombre"));
+                usuario.setDni(value.getString("dni"));
+                usuario.setNumero_telefono(value.getString("numero_telefono"));
+                usuario.setEmail(value.getString("email"));
+                usuario.setPhoto_user(value.getString("photo_user"));
+                usuario.setPassword(value.getString("password"));
+                bundle.putSerializable("usser_class",usuario);
+            }
+        });
+                                                                                              }
+        /*firebaseFirestore.collection("usuario").document(id_usser).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 usuario = new Usuario();
                 usuario.setId(documentSnapshot.getString("id"));
                 usuario.setNombre(documentSnapshot.getString("nombre"));
                 usuario.setDni(documentSnapshot.getString("dni"));
-                usuario.setNumerotelefono(documentSnapshot.getString("numerotelefono"));
+                usuario.setNumero_telefono(documentSnapshot.getString("numero_telefono"));
                 usuario.setEmail(documentSnapshot.getString("email"));
-                usuario.setPhoto(documentSnapshot.getString("photouser"));
+                usuario.setPhoto_user(documentSnapshot.getString("photo_user"));
                 usuario.setPassword(documentSnapshot.getString("password"));
                 bundle.putSerializable("usser_class",usuario);
             }
-        });
-    }
+        })*/
+
+
 
     public void loadFragment(Fragment fragment){
         fragment.setArguments(bundle);

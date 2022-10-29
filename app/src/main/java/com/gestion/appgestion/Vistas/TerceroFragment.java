@@ -81,27 +81,27 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
         txtDni.getEditText().setText(usuario.getDni());
         txtEmail.getEditText().setText(usuario.getEmail());
         txtPassword.getEditText().setText(usuario.getPassword());
-        txtNumeroTelefono.getEditText().setText(usuario.getNumerotelefono());
-        if(!usuario.getPhoto().equals("")){
-            Picasso.get().load(usuario.getPhoto()).into(photo_preview);
+        txtNumeroTelefono.getEditText().setText(usuario.getNumero_telefono());
+        if(!usuario.getPhoto_user().equals("")){
+            Picasso.get().load(usuario.getPhoto_user()).into(photo_preview);
         }
     }
 
-    public void loadUsserData(){
+    /*public void loadUsserData(){
         DocumentReference docRef = firebaseFirestore.collection("usuario").document(usuario.getId());
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if(!documentSnapshot.getString("photo_user").equals("")){
-                    Picasso.get().load(documentSnapshot.getString("photouser")).into(photo_preview);
+                    Picasso.get().load(documentSnapshot.getString("photo_user")).into(photo_preview);
                 }
                 txtNombre.getEditText().setText(documentSnapshot.getString("nombre"));
                 txtDni.getEditText().setText(documentSnapshot.getString("dni"));
                 txtEmail.getEditText().setText(documentSnapshot.getString("email"));
                 txtPassword.getEditText().setText(documentSnapshot.getString("password"));
-                txtNumeroTelefono.getEditText().setText(documentSnapshot.getString("numerotelefono"));
+                txtNumeroTelefono.getEditText().setText(documentSnapshot.getString("numero_telefono"));
             }
         });
-    }
+    }*/
 
     @Override
     public void onClick(View event) {
@@ -138,7 +138,7 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
             HashMap<String, Object> map = new HashMap<>();
             map.put("nombre", nombre);
             map.put("dni", dni);
-            map.put("numerotelefono", numero_telefono);
+            map.put("numero_telefono", numero_telefono);
             map.put("email", email);
             firebaseFirestore.collection("usuario").document(usuario.getId()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -170,10 +170,10 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
                         public void onSuccess(Uri uri) {
                             String download_uri = uri.toString();
                             HashMap<String, Object> map = new HashMap<>();
-                            map.put("photouser", download_uri);
+                            map.put("photo_user", download_uri);
                             firebaseFirestore.collection("usuario").document(usuario.getId()).update(map);
                             Picasso.get().load(download_uri).into(photo_preview);
-                            usuario.setPhoto(download_uri);
+                            usuario.setPhoto_user(download_uri);
                             loadingBar.dismiss();
                             message("Foto Actualizada.");
                         }
@@ -186,6 +186,12 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
                 message("error al subir la foto");
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        loadData();
     }
 
     public void message(String mensaje){
