@@ -3,9 +3,7 @@ package com.gestion.appgestion.Vistas;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,22 +12,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.gestion.appgestion.Modelo.Tarea;
 import com.gestion.appgestion.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class Detalle_Tarea extends AppCompatActivity {
+public class Detalle_Tarea extends AppCompatActivity{
     private Tarea tarea;
     private boolean favorito = false;
     private FirebaseFirestore firebaseFirestore;
@@ -153,5 +146,6 @@ public class Detalle_Tarea extends AppCompatActivity {
                 })
                 .show();
     }
+
 
 }
