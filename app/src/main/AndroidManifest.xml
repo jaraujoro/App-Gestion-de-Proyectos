@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Vistas.Detalle_Tarea"
+            android:name=".Vistas.Detalle_Tablero"
             android:exported="false" />
         <activity
             android:name=".Vistas.Menu_Activity"

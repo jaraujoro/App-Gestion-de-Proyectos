@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,9 +20,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import com.gestion.appgestion.Modelo.Tarea;
+
+import com.gestion.appgestion.Modelo.Tablero;
 import com.gestion.appgestion.R;
-import com.gestion.appgestion.Utilidades.ListAdapter;
+import com.gestion.appgestion.Utilidades.ListAdapterTablero;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,8 +46,8 @@ import java.util.Map;
 
 public class PrimerFragment extends Fragment implements View.OnClickListener {
 
-    FloatingActionButton button_float;
-    List<Tarea> tareaList;
+    FloatingActionButton btn_agregar_tablero;
+    List<Tablero> tableroList;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private ProgressDialog loadingBar;
@@ -63,19 +65,20 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
     @Override //https://www.youtube.com/watch?v=sYHKhwoVU4Q barra de navegación arriba
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_primer, container, false);
-        button_float = view.findViewById(R.id.button_float);
-        button_float.setOnClickListener(this);
+        btn_agregar_tablero = view.findViewById(R.id.btn_agregar_tablero);
+        btn_agregar_tablero.setOnClickListener(this);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        getActivity().setTitle("Tableros");
         id = firebaseAuth.getCurrentUser().getUid();
-        listTask(view);
+        Lista_Tablero(view);
         return  view;
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        listTask(getView());
+        Lista_Tablero(getView());
     }
 
     public void progress(String mensaje){
@@ -86,24 +89,19 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    public void listTask(View view){//https://www.youtube.com/watch?v=Mne2SrtySME
-        tareaList = new ArrayList<>();
-        DateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-        firebaseFirestore.collection("tarea").whereEqualTo("idusuario",id).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+    public void Lista_Tablero(View view){//https://www.youtube.com/watch?v=Mne2SrtySME
+        tableroList = new ArrayList<>();
+        firebaseFirestore.collection("tablero").whereEqualTo("id_usuario",id).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                     try {
-                        Tarea tarea = new Tarea();
-                        tarea.setId(document.getId());
-                        tarea.setIdusuario(document.getString("idusuario"));
-                        tarea.setTitulo(document.getString("titulo"));
-                        tarea.setDescripcion(document.getString("descripcion"));
-                        tarea.setFecha_creacion(document.getString("fecha_creacion"));
-                        tarea.setFecha_inicio(document.getString("fecha_inicio"));
-                        tarea.setFecha_finalizacion(document.getString("fecha_finalizacion"));
-                        tarea.setEstado(document.getString("estado"));
-                        tareaList.add(tarea);
+                        Tablero tablero = new Tablero();
+                        tablero.setId_tablero(document.getId());
+                        tablero.setTitulo(document.getString("titulo"));
+                        tablero.setFecha_creación("fecha_Creacion");
+                        tablero.setId_usuario(document.getString("id_usuario"));
+                        tableroList.add(tablero);
                     }catch (Exception exception){
                         message("error:`"+exception);
                     }
@@ -112,17 +110,13 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
         }).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                ListAdapter listAdapter = new ListAdapter(tareaList, getContext(), new ListAdapter.OnItemClickListener() {
+                ListAdapterTablero listAdapter = new ListAdapterTablero(tableroList, getContext(), new ListAdapterTablero.OnItemClickListener() {
                     @Override
-                    public void onItemClick(Tarea item) {
-                        startActivity(new Intent(getContext(), Detalle_Tarea.class).putExtra("class_tarea",item));
-                        /*Detalle_Tarea nuevoFragmento = new Detalle_Tarea();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                        transaction.replace(R.id.frame_container, nuevoFragmento);
-                        transaction.commit();*/
+                    public void onItemClick(Tablero item) {
+                        startActivity(new Intent(getContext(), Detalle_Tablero.class).putExtra("class_tablero",item));//enviamos los datos datos del tablero a dellate_tablero
                     }
                 });
-                RecyclerView recyclerView = view.findViewById(R.id.listRecycleView);
+                RecyclerView recyclerView = view.findViewById(R.id.listRecycleView_tablero);
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setAdapter(listAdapter);
@@ -136,22 +130,17 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View event) { // https://stackoverflow.com/questions/3426917/how-to-add-two-edit-text-fields-in-an-alert-dialog
-        if(button_float==event){ // https://www.youtube.com/watch?v=Kz9TkDY2sP8
+        if(btn_agregar_tablero==event){ // https://www.youtube.com/watch?v=Kz9TkDY2sP8
             final EditText titulo= new EditText(getContext());
-            final EditText descripcion= new EditText(getContext());
             titulo.setHint("Título");
             titulo.setMinEms(16);
             titulo.setInputType(InputType.TYPE_CLASS_TEXT);
-            descripcion.setHint("Descripción");
-            descripcion.setMinEms(16);
-            descripcion.setInputType(InputType.TYPE_CLASS_TEXT);
             LinearLayout linearLayout=new LinearLayout(getContext());
             linearLayout.setOrientation(linearLayout.VERTICAL);
             linearLayout.addView(titulo);
-            linearLayout.addView(descripcion);
             linearLayout.setPadding(70,50,70,10);
             AlertDialog dialog = new AlertDialog.Builder(getContext())
-                    .setTitle("Crear Nueva Tarea")
+                    .setTitle("Crear Nuevo Tablero")
                     .setPositiveButton("Aceptar",null)
                     .setNegativeButton("Cancelar",null)
                     .setView(linearLayout)
@@ -161,12 +150,11 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onClick(View view) {
-                    String titulo_tarea      = titulo.getText().toString().trim();
-                    String descripcion_tarea = descripcion.getText().toString().trim();
-                    if(titulo_tarea.isEmpty() || descripcion_tarea.isEmpty()){
+                    String titulo_tablero      = titulo.getText().toString().trim();
+                    if(titulo_tablero.isEmpty()){
                         message("Complete todos los campos");
                     }else{
-                        registerTask(titulo_tarea, descripcion_tarea);
+                        registerTask(titulo_tablero);
                         dialog.dismiss();
                     }
                 }
@@ -176,20 +164,16 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void registerTask(String task, String description){
+    public void registerTask(String titulo){ //cada tablero pertenece a un usuario
         Map<String, Object> map = new HashMap<>();
-        map.put("idusuario", id);
-        map.put("titulo", task);
-        map.put("descripcion", description);
+        map.put("id_usuario", id);
+        map.put("titulo",titulo);
         map.put("fecha_creacion",fecha());
-        map.put("fecha_inicio", "");
-        map.put("fecha_finalizacion", "");
-        map.put("estado", "Pendiente");
-        firebaseFirestore.collection("tarea").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        firebaseFirestore.collection("tablero").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
-                listTask(getView());
-                message("Los datos se almacenaron correctamente.");
+                Lista_Tablero(getView());
+                message("Se ha creado un tablero.");
             }}).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {

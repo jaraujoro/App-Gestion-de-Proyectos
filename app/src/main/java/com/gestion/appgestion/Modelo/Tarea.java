@@ -5,27 +5,46 @@ import java.util.Date;
 
 public class Tarea implements Serializable {
     private String id;
+    private String id_usuario;
+    private String id_tablero;
     private String titulo;
     private String descripcion;
-    private String idusuario;
-    private String   fecha_creacion;
-    private String   fecha_inicio;
-    private String   fecha_finalizacion;
+    private String fecha_creacion;
+    private String fecha_inicio;
+    private String fecha_finalizacion;
     private String estado;
+
 
     public Tarea(){
 
     }
 
-    public Tarea(String id, String titulo, String descripcion, String idusuario, String fecha_creacion, String fecha_inicio, String fecha_finalizacion, String estado) {
+    public Tarea(String id, String id_usuario, String id_tablero, String titulo, String descripcion, String fecha_creacion, String fecha_inicio, String fecha_finalizacion, String estado) {
         this.id = id;
+        this.id_usuario = id_usuario;
+        this.id_tablero = id_tablero;
         this.titulo = titulo;
         this.descripcion = descripcion;
-        this.idusuario = idusuario;
         this.fecha_creacion = fecha_creacion;
         this.fecha_inicio = fecha_inicio;
         this.fecha_finalizacion = fecha_finalizacion;
         this.estado = estado;
+    }
+
+    public String getId_usuario() {
+        return id_usuario;
+    }
+
+    public void setId_usuario(String id_usuario) {
+        this.id_usuario = id_usuario;
+    }
+
+    public String getId_tablero() {
+        return id_tablero;
+    }
+
+    public void setId_tablero(String id_tablero) {
+        this.id_tablero = id_tablero;
     }
 
     public String getId() {
@@ -53,11 +72,11 @@ public class Tarea implements Serializable {
     }
 
     public String getIdusuario() {
-        return idusuario;
+        return id_usuario;
     }
 
-    public void setIdusuario(String idusuario) {
-        this.idusuario = idusuario;
+    public void setIdusuario(String id_usuario) {
+        this.id_usuario = id_usuario;
     }
 
     public String getFecha_creacion() {
