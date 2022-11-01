@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,10 +26,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gestion.appgestion.View_Detalle.Estado_tarea;
 import com.gestion.appgestion.Modelo.Tablero;
 import com.gestion.appgestion.Modelo.Tarea;
 import com.gestion.appgestion.R;
 import com.gestion.appgestion.Utilidades.ListAdapterTarea;
+import com.gestion.appgestion.View_Detalle.Listar_tarea;
 import com.gestion.appgestion.Vista_Usser.Login_Activity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -52,34 +56,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Detalle_Tablero extends AppCompatActivity implements View.OnClickListener {
+public class Detalle_Tablero extends AppCompatActivity{
 
     private Tablero tablero;
     private boolean favorito = false;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
-    private FloatingActionButton btn_agregar_tarea;
-    private TextView titulo_tablero , informacion_tarea;
-    List<Tarea> tareaList;
-    Tarea tarea;
-
+    private Estado_tarea estado_tarea = new Estado_tarea();
+    private Listar_tarea listar_tarea = new Listar_tarea();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_tablero);
-        tablero = (Tablero) getIntent().getSerializableExtra("class_tablero");
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
-        btn_agregar_tarea = findViewById(R.id.btn_agregar_tarea);
-        btn_agregar_tarea.setOnClickListener(this);
-        titulo_tablero = findViewById(R.id.titulo_tablero);
-        titulo_tablero.setText("Tablero: "+tablero.getTitulo());
-        informacion_tarea = findViewById(R.id.informacion_tarea);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Tareas");
         BottomNavigationView navigation = findViewById(R.id.bottom_navigation_tarea);
         navigation.setOnNavigationItemSelectedListener(itemSelected);
-        listar_Tarea();
+        tablero = (Tablero) getIntent().getSerializableExtra("class_tablero");
+        listar_tarea = Listar_tarea.newInstance(tablero);
+        loadFragment(listar_tarea);
     }
 
     private final BottomNavigationView.OnNavigationItemSelectedListener itemSelected = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -87,58 +84,20 @@ public class Detalle_Tablero extends AppCompatActivity implements View.OnClickLi
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()){
                 case R.id.lista_tarea:
-                    message("lista");
+                    loadFragment(listar_tarea);
                     return true;
                 case R.id.detalle_tarea:
-                    message("detalle");
+                    loadFragment(estado_tarea);
                     return true;
             }
             return false;
         }
     };
 
-    public void listar_Tarea(){
-        tareaList = new ArrayList<>();
-        firebaseFirestore.collection("tarea").whereEqualTo("id_tablero",tablero.getId_tablero()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    try {
-                        tarea = new Tarea();
-                        tarea.setId(document.getId());
-                        tarea.setId_tablero(document.getString("id_tablero"));
-                        tarea.setId_usuario(document.getString("id_usuario"));
-                        tarea.setTitulo(document.getString("titulo"));
-                        tarea.setDescripcion(document.getString("descripcion"));
-                        tarea.setFecha_creacion(document.getString("fecha_creacion"));
-                        tarea.setFecha_inicio(document.getString("fecha_inicio"));
-                        tarea.setFecha_finalizacion(document.getString("fecha_finalizacion"));
-                        tarea.setEstado(document.getString("estado"));
-                        tareaList.add(tarea);
-                    }catch (Exception exception){
-                        message("error:`"+exception);
-                    }
-                }
-            }
-        }).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                ListAdapterTarea listAdapter = new ListAdapterTarea(tareaList, getApplicationContext(), new ListAdapterTarea.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(Tarea item) {
-                        message("click a la tarea: "+ item.getTitulo());
-                        //startActivity(new Intent(getApplicationContext(), Detalle_Tablero.class).putExtra("class_tablero",item));//enviamos los datos datos del tablero a dellate_tablero
-                    }
-                });
-                RecyclerView recyclerView = findViewById(R.id.listRecycleView_tarea);
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                recyclerView.setAdapter(listAdapter);
-                if(listAdapter.getItemCount()<=0){
-                    informacion_tarea.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+    public void loadFragment(Fragment fragment){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container_tarea,fragment);
+        transaction.commit();
     }
 
 
@@ -175,84 +134,6 @@ public class Detalle_Tablero extends AppCompatActivity implements View.OnClickLi
         }
         return super.onOptionsItemSelected(item);
     }
-
-    public void message(String mensaje){
-        Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override //click event
-    public void onClick(View event) {
-        if(btn_agregar_tarea==event){ // https://www.youtube.com/watch?v=Kz9TkDY2sP8
-            final EditText titulo= new EditText(Detalle_Tablero.this);
-            final EditText descripcion= new EditText(Detalle_Tablero.this);
-            titulo.setHint("Título");
-            titulo.setMinEms(16);
-            titulo.setInputType(InputType.TYPE_CLASS_TEXT);
-            descripcion.setHint("Descripción");
-            descripcion.setMinEms(16);
-            descripcion.setInputType(InputType.TYPE_CLASS_TEXT);
-            LinearLayout linearLayout=new LinearLayout(Detalle_Tablero.this);
-            linearLayout.setOrientation(linearLayout.VERTICAL);
-            linearLayout.addView(titulo);
-            linearLayout.addView(descripcion);
-            linearLayout.setPadding(70,50,70,10);
-            AlertDialog dialog = new AlertDialog.Builder(Detalle_Tablero.this)
-                    .setTitle("Crear Nueva Tarea")
-                    .setPositiveButton("Aceptar",null)
-                    .setNegativeButton("Cancelar",null)
-                    .setView(linearLayout)
-                    .show();
-            Button positive = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            positive.setOnClickListener(new View.OnClickListener() {
-                @RequiresApi(api = Build.VERSION_CODES.O)
-                @Override
-                public void onClick(View view) {
-                    String titulo_tarea      = titulo.getText().toString().trim();
-                    String descripcion_tarea = descripcion.getText().toString().trim();
-                    if(titulo_tarea.isEmpty() || descripcion_tarea.isEmpty()){
-                        message("Complete todos los campos");
-                    }else{
-                        registrar_Tarea(titulo_tarea, descripcion_tarea);
-                        dialog.dismiss();
-                    }
-                }
-            });
-        }
-    }
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void registrar_Tarea(String titulo, String descripcion){
-        Map<String, Object> map = new HashMap<>();
-        map.put("id_tablero", tablero.getId_tablero());
-        map.put("id_usuario", firebaseAuth.getCurrentUser().getUid());
-        map.put("titulo", titulo);
-        map.put("descripcion", descripcion);
-        map.put("fecha_creacion",fecha());
-        map.put("fecha_inicio", "");
-        map.put("fecha_finalizacion", "");
-        map.put("estado", "Pendiente");
-        firebaseFirestore.collection("tarea").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                listar_Tarea();
-                message("Se ha creado una tarea.");
-            }}).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                message("Error al registrar.");
-            }
-        });
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public String fecha(){{
-        ZoneId zona = ZoneId.of("America/Lima");
-        LocalDate localDate = LocalDate.now(zona);
-        DateTimeFormatter f = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        String currentDate = localDate.format(f);
-        return currentDate;
-    }}
-
-
 
     public void guardar_favorito(MenuItem item){
         Map<String, Object> map = new HashMap<>();
@@ -307,15 +188,11 @@ public class Detalle_Tablero extends AppCompatActivity implements View.OnClickLi
                 });
                 startActivity(new Intent(Detalle_Tablero.this, Menu_Activity.class).putExtra("id_usser",firebaseAuth.getCurrentUser().getUid()));
                 finish();
-            }
-        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            }}).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        }).show();
+            }}).show();
     }
-
 
 }
 

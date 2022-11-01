@@ -1,6 +1,7 @@
 package com.gestion.appgestion.Utilidades;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,14 @@ public class ListAdapterTarea extends RecyclerView.Adapter<ListAdapterTarea.View
     public void onBindViewHolder(@NonNull ListAdapterTarea.ViewHolder holder, int position) {
         Tarea tarea  = tareaList.get(position);
         holder.txt_titulo.setText(tarea.getTitulo());
+        holder.txt_estado_tarea.setText(tarea.getEstado());
+        if(tarea.getEstado().equals("Pendiente")){
+            holder.txt_estado_tarea.setTextColor(Color.RED);
+        }else if(tarea.getEstado().equals("Progreso")){
+            holder.txt_estado_tarea.setTextColor(Color.rgb(255, 165, 0));
+        }else if(tarea.getEstado().equals("Completado")){
+            holder.txt_estado_tarea.setTextColor(Color.rgb(19, 173, 9));
+        }
         holder.bindData(tareaList.get(position));
     }
 
@@ -52,10 +61,11 @@ public class ListAdapterTarea extends RecyclerView.Adapter<ListAdapterTarea.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-       TextView txt_titulo,txt_descripcion;
+       TextView txt_titulo,txt_estado_tarea;
        ViewHolder(View view){
            super(view);
            txt_titulo      = (TextView) view.findViewById(R.id.titulo_tarea);
+           txt_estado_tarea = (TextView) view.findViewById(R.id.estado_tarea);
        }
        void bindData(final Tarea item ){
             itemView.setOnClickListener(new View.OnClickListener() {
