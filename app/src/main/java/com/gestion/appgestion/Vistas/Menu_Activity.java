@@ -11,6 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.gestion.appgestion.Modelo.Usuario;
 import com.gestion.appgestion.R;
+import com.gestion.appgestion.Vista_Fragment_Menu.PrimerFragment;
+import com.gestion.appgestion.Vista_Fragment_Menu.SegundoFragment;
+import com.gestion.appgestion.Vista_Fragment_Menu.TerceroFragment;
+import com.gestion.appgestion.Vista_Usser.Login_Activity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -28,6 +32,7 @@ public class Menu_Activity extends AppCompatActivity {
     private Usuario usuario;
     private String  id_usser;
     private Bundle bundle = new Bundle();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +59,7 @@ public class Menu_Activity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.option_exit:
                 firebaseAuth.signOut();
-                startActivity(new Intent(getApplicationContext(),Login_Activity.class));
+                startActivity(new Intent(getApplicationContext(), Login_Activity.class));
                 finish();
                 break;
         }
@@ -94,23 +99,7 @@ public class Menu_Activity extends AppCompatActivity {
                 bundle.putSerializable("usser_class",usuario);
             }
         });
-                                                                                              }
-        /*firebaseFirestore.collection("usuario").document(id_usser).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                usuario = new Usuario();
-                usuario.setId(documentSnapshot.getString("id"));
-                usuario.setNombre(documentSnapshot.getString("nombre"));
-                usuario.setDni(documentSnapshot.getString("dni"));
-                usuario.setNumero_telefono(documentSnapshot.getString("numero_telefono"));
-                usuario.setEmail(documentSnapshot.getString("email"));
-                usuario.setPhoto_user(documentSnapshot.getString("photo_user"));
-                usuario.setPassword(documentSnapshot.getString("password"));
-                bundle.putSerializable("usser_class",usuario);
-            }
-        })*/
-
-
+    }
 
     public void loadFragment(Fragment fragment){
         fragment.setArguments(bundle);

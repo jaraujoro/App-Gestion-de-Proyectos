@@ -6,17 +6,17 @@
     app:startDestination="@id/pantalla_principal">
     <fragment
         android:id="@+id/registrar_usuario"
-        android:name="com.gestion.appgestion.Vistas.Register_Activity"
+        android:name="com.gestion.appgestion.Vista_Usser.Register_Activity"
         android:label="activity_register"
         tools:layout="@layout/activity_register" />
     <fragment
         android:id="@+id/olvide_contraseña"
-        android:name="com.gestion.appgestion.Vistas.Password_Activity"
+        android:name="com.gestion.appgestion.Vista_Usser.Password_Activity"
         android:label="activity_olvide_password"
         tools:layout="@layout/activity_password"/>
     <fragment
         android:id="@+id/pantalla_principal"
-        android:name="com.gestion.appgestion.Vistas.Password_Activity"
+        android:name="com.gestion.appgestion.Vista_Usser.Password_Activity"
         android:label="activity_login"
         tools:layout="@layout/activity_login">
         <action

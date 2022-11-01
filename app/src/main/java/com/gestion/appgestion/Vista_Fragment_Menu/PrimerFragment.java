@@ -1,4 +1,4 @@
-package com.gestion.appgestion.Vistas;
+package com.gestion.appgestion.Vista_Fragment_Menu;
 
 
 import android.app.AlertDialog;
@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,11 +18,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.gestion.appgestion.Modelo.Tablero;
 import com.gestion.appgestion.R;
 import com.gestion.appgestion.Utilidades.ListAdapterTablero;
+import com.gestion.appgestion.Vistas.Detalle_Tablero;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,8 +34,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -48,6 +46,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
 
     FloatingActionButton btn_agregar_tablero;
     List<Tablero> tableroList;
+    TextView resultado;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private ProgressDialog loadingBar;
@@ -67,18 +66,19 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_primer, container, false);
         btn_agregar_tablero = view.findViewById(R.id.btn_agregar_tablero);
         btn_agregar_tablero.setOnClickListener(this);
+        resultado = view.findViewById(R.id.resultado);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         getActivity().setTitle("Tableros");
         id = firebaseAuth.getCurrentUser().getUid();
-        Lista_Tablero(view);
+        listar_Tablero(view);
         return  view;
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Lista_Tablero(getView());
+        listar_Tablero(getView());
     }
 
     public void progress(String mensaje){
@@ -88,8 +88,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
         loadingBar.show();
     }
 
-
-    public void Lista_Tablero(View view){//https://www.youtube.com/watch?v=Mne2SrtySME
+    public void listar_Tablero(View view){//https://www.youtube.com/watch?v=Mne2SrtySME
         tableroList = new ArrayList<>();
         firebaseFirestore.collection("tablero").whereEqualTo("id_usuario",id).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -99,7 +98,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
                         Tablero tablero = new Tablero();
                         tablero.setId_tablero(document.getId());
                         tablero.setTitulo(document.getString("titulo"));
-                        tablero.setFecha_creación("fecha_Creacion");
+                        tablero.setFecha_creación("fecha_creacion");
                         tablero.setId_usuario(document.getString("id_usuario"));
                         tableroList.add(tablero);
                     }catch (Exception exception){
@@ -120,6 +119,9 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setAdapter(listAdapter);
+                if(listAdapter.getItemCount()<=0){
+                    resultado.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
@@ -154,7 +156,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
                     if(titulo_tablero.isEmpty()){
                         message("Complete todos los campos");
                     }else{
-                        registerTask(titulo_tablero);
+                        registrar_Tablero(titulo_tablero);
                         dialog.dismiss();
                     }
                 }
@@ -164,7 +166,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void registerTask(String titulo){ //cada tablero pertenece a un usuario
+    public void registrar_Tablero(String titulo){ //cada tablero pertenece a un usuario
         Map<String, Object> map = new HashMap<>();
         map.put("id_usuario", id);
         map.put("titulo",titulo);
@@ -172,7 +174,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
         firebaseFirestore.collection("tablero").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
-                Lista_Tablero(getView());
+                listar_Tablero(getView());
                 message("Se ha creado un tablero.");
             }}).addOnFailureListener(new OnFailureListener() {
             @Override

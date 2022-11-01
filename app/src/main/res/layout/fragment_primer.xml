@@ -8,8 +8,21 @@
     android:background="@color/login_bk_color"
     android:focusableInTouchMode="true"
     android:gravity="center"
-    tools:context=".Vistas.PrimerFragment">
+    tools:context=".Vista_Fragment_Menu.PrimerFragment">
 
+    <TextView
+        android:id="@+id/resultado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textColor="@color/black"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:text="No hay información."
+        android:visibility="invisible"
+        android:textSize="17dp"
+        android:textStyle="bold"
+        android:textAlignment="center"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

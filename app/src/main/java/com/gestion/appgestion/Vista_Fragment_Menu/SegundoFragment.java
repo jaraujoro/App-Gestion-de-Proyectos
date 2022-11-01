@@ -1,4 +1,4 @@
-package com.gestion.appgestion.Vistas;
+package com.gestion.appgestion.Vista_Fragment_Menu;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;

@@ -23,10 +23,10 @@
             android:name=".Vistas.Menu_Activity"
             android:exported="false" />
         <activity
-            android:name=".Vistas.Password_Activity"
+            android:name=".Vista_Usser.Password_Activity"
             android:exported="false" />
         <activity
-            android:name=".Vistas.Login_Activity"
+            android:name=".Vista_Usser.Login_Activity"
             android:exported="true"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -36,7 +36,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Vistas.Register_Activity"
+            android:name=".Vista_Usser.Register_Activity"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>

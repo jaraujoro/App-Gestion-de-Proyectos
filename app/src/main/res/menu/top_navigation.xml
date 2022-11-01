@@ -2,13 +2,18 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
         <item
-            android:id="@+id/eliminar"
-            android:title="Eliminar"
-            android:icon="@drawable/ic_baseline_delete_24"
+            android:id="@+id/agregar_persona"
+            android:title="Agregar"
+            android:icon="@drawable/ic_baseline_person_add_24"
             app:showAsAction="ifRoom|withText" />
         <item
             android:id="@+id/favorito"
             android:title="Favorito"
             android:icon="@drawable/ic_baseline_favorite_24"
+            app:showAsAction="ifRoom|withText" />
+        <item
+            android:id="@+id/eliminar"
+            android:title="Eliminar"
+            android:icon="@drawable/ic_baseline_delete_24"
             app:showAsAction="ifRoom|withText" />
 </menu>

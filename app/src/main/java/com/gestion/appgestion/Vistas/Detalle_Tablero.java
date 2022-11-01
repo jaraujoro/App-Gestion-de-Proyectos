@@ -27,12 +27,13 @@ import android.widget.Toast;
 import com.gestion.appgestion.Modelo.Tablero;
 import com.gestion.appgestion.Modelo.Tarea;
 import com.gestion.appgestion.R;
-import com.gestion.appgestion.Utilidades.ListAdapterTablero;
 import com.gestion.appgestion.Utilidades.ListAdapterTarea;
+import com.gestion.appgestion.Vista_Usser.Login_Activity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -52,15 +53,16 @@ import java.util.List;
 import java.util.Map;
 
 public class Detalle_Tablero extends AppCompatActivity implements View.OnClickListener {
+
     private Tablero tablero;
     private boolean favorito = false;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
     private FloatingActionButton btn_agregar_tarea;
-    private TextView titulo_tablero;
+    private TextView titulo_tablero , informacion_tarea;
     List<Tarea> tareaList;
     Tarea tarea;
-    int posiciones=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,10 +74,28 @@ public class Detalle_Tablero extends AppCompatActivity implements View.OnClickLi
         btn_agregar_tarea.setOnClickListener(this);
         titulo_tablero = findViewById(R.id.titulo_tablero);
         titulo_tablero.setText("Tablero: "+tablero.getTitulo());
+        informacion_tarea = findViewById(R.id.informacion_tarea);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Tareas");
+        BottomNavigationView navigation = findViewById(R.id.bottom_navigation_tarea);
+        navigation.setOnNavigationItemSelectedListener(itemSelected);
         listar_Tarea();
     }
+
+    private final BottomNavigationView.OnNavigationItemSelectedListener itemSelected = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()){
+                case R.id.lista_tarea:
+                    message("lista");
+                    return true;
+                case R.id.detalle_tarea:
+                    message("detalle");
+                    return true;
+            }
+            return false;
+        }
+    };
 
     public void listar_Tarea(){
         tareaList = new ArrayList<>();
@@ -114,6 +134,9 @@ public class Detalle_Tablero extends AppCompatActivity implements View.OnClickLi
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 recyclerView.setAdapter(listAdapter);
+                if(listAdapter.getItemCount()<=0){
+                    informacion_tarea.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
@@ -136,7 +159,7 @@ public class Detalle_Tablero extends AppCompatActivity implements View.OnClickLi
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.option_exit:
-                startActivity(new Intent(getApplicationContext(),Login_Activity.class));
+                startActivity(new Intent(getApplicationContext(), Login_Activity.class));
                 finish();
                 break;
             case R.id.eliminar:

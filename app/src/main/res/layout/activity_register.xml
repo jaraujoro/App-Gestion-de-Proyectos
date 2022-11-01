@@ -8,7 +8,7 @@
     android:background="@color/register_bk_color"
     android:focusableInTouchMode="true"
     android:gravity="center"
-    tools:context=".Vistas.Register_Activity">
+    tools:context=".Vista_Usser.Register_Activity">
 
     <ScrollView
         android:layout_width="match_parent"
