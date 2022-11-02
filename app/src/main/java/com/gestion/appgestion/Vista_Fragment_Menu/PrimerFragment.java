@@ -32,9 +32,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -90,40 +92,34 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
 
     public void listar_Tablero(View view){//https://www.youtube.com/watch?v=Mne2SrtySME
         tableroList = new ArrayList<>();
-        firebaseFirestore.collection("tablero").whereEqualTo("id_usuario",id).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        firebaseFirestore.collection("tablero").whereEqualTo("id_usuario", id ).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    try {
                         Tablero tablero = new Tablero();
                         tablero.setId_tablero(document.getId());
                         tablero.setTitulo(document.getString("titulo"));
                         tablero.setFecha_creación("fecha_creacion");
-                        tablero.setId_usuario(document.getString("id_usuario"));
+                        tablero.setId_usuario(String.valueOf(document.get("id_usuario")));
                         tableroList.add(tablero);
-                    }catch (Exception exception){
-                        message("error:`"+exception);
-                    }
                 }
-            }
-        }).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                ListAdapterTablero listAdapter = new ListAdapterTablero(tableroList, getContext(), new ListAdapterTablero.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(Tablero item) {
-                        startActivity(new Intent(getContext(), Detalle_Tablero.class).putExtra("class_tablero",item));//enviamos los datos datos del tablero a dellate_tablero
+            }}).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    ListAdapterTablero listAdapter = new ListAdapterTablero(tableroList, getContext(), new ListAdapterTablero.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(Tablero item) {
+                            startActivity(new Intent(getContext(), Detalle_Tablero.class).putExtra("class_tablero",item));//enviamos los datos datos del tablero a dellate_tablero
+                        }
+                    });
+                    RecyclerView recyclerView = view.findViewById(R.id.listRecycleView_tablero);
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    recyclerView.setAdapter(listAdapter);
+                    if(listAdapter.getItemCount()<=0){
+                        resultado.setVisibility(View.VISIBLE);
                     }
-                });
-                RecyclerView recyclerView = view.findViewById(R.id.listRecycleView_tablero);
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                recyclerView.setAdapter(listAdapter);
-                if(listAdapter.getItemCount()<=0){
-                    resultado.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+            }});
     }
 
     public void message(String mensaje){
@@ -187,8 +183,8 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String fecha(){{
         ZoneId zona = ZoneId.of("America/Lima");
-        LocalDate localDate = LocalDate.now(zona);
-        DateTimeFormatter f = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDateTime localDate = LocalDateTime.now(zona);
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         String currentDate = localDate.format(f);
         return currentDate;
     }}

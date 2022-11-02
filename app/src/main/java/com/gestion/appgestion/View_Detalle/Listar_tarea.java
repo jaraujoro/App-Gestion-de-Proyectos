@@ -86,6 +86,11 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
         return  view;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        listar_Tarea(getView());
+    }
 
     public void listar_Tarea(View view){
         tareaList = new ArrayList<>();
@@ -93,7 +98,6 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    try {
                         tarea = new Tarea();
                         tarea.setId(document.getId());
                         tarea.setId_tablero(document.getString("id_tablero"));
@@ -105,9 +109,6 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
                         tarea.setFecha_finalizacion(document.getString("fecha_finalizacion"));
                         tarea.setEstado(document.getString("estado"));
                         tareaList.add(tarea);
-                    }catch (Exception exception){
-                        message("error:`"+exception);
-                    }
                 }
             }
         }).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

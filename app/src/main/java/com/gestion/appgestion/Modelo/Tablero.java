@@ -17,8 +17,6 @@ public class Tablero implements Serializable {
         this.id_usuario = id_usuario;
     }
 
-
-
     public String getId_usuario() {
         return id_usuario;
     }
