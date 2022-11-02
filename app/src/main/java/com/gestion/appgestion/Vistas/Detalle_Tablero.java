@@ -104,12 +104,12 @@ public class Detalle_Tablero extends AppCompatActivity{
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) { //https://developer.android.com/guide/fragments/appbar?hl=es-419
         MenuItem item = menu.findItem(R.id.favorito);
-        getFavorito(item);
+        getFavorito(item);  //prepara el favorito
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) { //crea la barra de menu superior
         getMenuInflater().inflate(R.menu.top_navigation,menu);
         return true;
     }
@@ -117,23 +117,28 @@ public class Detalle_Tablero extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.option_exit:
+            case R.id.option_exit: //cerrar sesion
                 startActivity(new Intent(getApplicationContext(), Login_Activity.class));
                 finish();
                 break;
-            case R.id.eliminar:
+            case R.id.eliminar: //eliminar tablero
                 eliminar_tablero();
                 break;
-            case R.id.favorito:
+            case R.id.favorito: //favorito tablero
                 guardar_favorito(item);
                 break;
-            case android.R.id.home:
-                overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
+            case android.R.id.home: //regresa al menu principal
                 finish();
-                return true;
+                overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void message(String message){
+        Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+    }
+
 
     public void guardar_favorito(MenuItem item){
         Map<String, Object> map = new HashMap<>();

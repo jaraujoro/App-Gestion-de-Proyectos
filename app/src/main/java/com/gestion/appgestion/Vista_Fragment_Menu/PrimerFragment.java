@@ -110,6 +110,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
                         @Override
                         public void onItemClick(Tablero item) {
                             startActivity(new Intent(getContext(), Detalle_Tablero.class).putExtra("class_tablero",item));//enviamos los datos datos del tablero a dellate_tablero
+                            getActivity().overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
                         }
                     });
                     RecyclerView recyclerView = view.findViewById(R.id.listRecycleView_tablero);

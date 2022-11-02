@@ -1,6 +1,7 @@
 package com.gestion.appgestion.View_Detalle;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -23,6 +24,7 @@ import com.gestion.appgestion.Modelo.Tablero;
 import com.gestion.appgestion.Modelo.Tarea;
 import com.gestion.appgestion.R;
 import com.gestion.appgestion.Utilidades.ListAdapterTarea;
+import com.gestion.appgestion.Vistas.Detalle_Tarea;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -118,7 +120,8 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
                     @Override
                     public void onItemClick(Tarea item) {
                         message("click a la tarea: "+ item.getTitulo());
-                        //startActivity(new Intent(getApplicationContext(), Detalle_Tablero.class).putExtra("class_tablero",item));//enviamos los datos datos del tablero a dellate_tablero
+                        startActivity(new Intent (getActivity(), Detalle_Tarea.class).putExtra("class_tarea",item));//enviamos los datos datos del tablero a dellate_tablero
+                        getActivity().overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
                     }
                 });
                 RecyclerView recyclerView = view.findViewById(R.id.listRecycleView_tarea);

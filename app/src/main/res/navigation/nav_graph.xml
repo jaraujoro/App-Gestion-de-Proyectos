@@ -25,5 +25,61 @@
         <action
             android:id="@+id/action_pantalla_principal_to_registrar_usuario"
             app:destination="@id/registrar_usuario" />
+        <action
+            android:id="@+id/action_pantalla_principal_to_primerFragment"
+            app:destination="@id/primerFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/terceroFragment"
+        android:name="com.gestion.appgestion.Vista_Fragment_Menu.TerceroFragment"
+        android:label="fragment_tercero"
+        tools:layout="@layout/fragment_tercero" />
+    <fragment
+        android:id="@+id/estado_tarea2"
+        android:name="com.gestion.appgestion.View_Detalle.Estado_tarea"
+        android:label="fragment_estado_tarea"
+        tools:layout="@layout/fragment_estado_tarea" />
+    <fragment
+        android:id="@+id/listar_tarea"
+        android:name="com.gestion.appgestion.View_Detalle.Listar_tarea"
+        android:label="fragment_listar_tarea"
+        tools:layout="@layout/fragment_listar_tarea" />
+    <fragment
+        android:id="@+id/primerFragment"
+        android:name="com.gestion.appgestion.Vista_Fragment_Menu.PrimerFragment"
+        android:label="fragment_primer"
+        tools:layout="@layout/fragment_primer" >
+        <action
+            android:id="@+id/action_primerFragment_to_segundoFragment"
+            app:destination="@id/segundoFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/segundoFragment"
+        android:name="com.gestion.appgestion.Vista_Fragment_Menu.SegundoFragment"
+        android:label="fragment_segundo"
+        tools:layout="@layout/fragment_segundo">
+        <action
+            android:id="@+id/action_segundoFragment_to_terceroFragment"
+            app:destination="@id/terceroFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left" />
+    </fragment>
+    <activity
+        android:id="@+id/detalle_Tablero"
+        android:name="com.gestion.appgestion.Vistas.Detalle_Tablero"
+        android:label="activity_detalle_tablero"
+        tools:layout="@layout/activity_detalle_tablero" />
+    <activity
+        android:id="@+id/detalle_Tarea"
+        android:name="com.gestion.appgestion.Vistas.Detalle_Tarea"
+        android:label="activity_detalle_tarea"
+        tools:layout="@layout/activity_detalle_tarea" />
+    <activity
+        android:id="@+id/menu_Activity"
+        android:name="com.gestion.appgestion.Vistas.Menu_Activity"
+        android:label="activity_menu"
+        tools:layout="@layout/activity_menu" />
 </navigation>
