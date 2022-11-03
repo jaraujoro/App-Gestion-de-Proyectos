@@ -91,8 +91,8 @@ public class Login_Activity extends AppCompatActivity implements  View.OnClickLi
                         if (task.isSuccessful()) {
                             id_usser = firebaseAuth.getCurrentUser().getUid();
                             loadingBar.dismiss();
+                            finishAffinity();
                             startActivity(new Intent(Login_Activity.this, Menu_Activity.class).putExtra("id_usser",id_usser));
-                            finish();
                         } else {
                             loadingBar.dismiss();
                             message("Datos incorrectos, Verifique su correo o contraseña");

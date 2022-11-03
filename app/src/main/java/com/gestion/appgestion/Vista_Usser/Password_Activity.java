@@ -33,14 +33,14 @@ public class Password_Activity extends AppCompatActivity  implements  View.OnCli
 
     public void OnClickLoginBack(View view){ //retrocede actividades con animaciones
         startActivity(new Intent(this, Login_Activity.class));
+        finishAffinity();
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
-        finish();
     }
 
     public void OnClickRegisterBack(View view){
         startActivity(new Intent(this, Register_Activity.class));
-        overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
-        finish();
+        finishAffinity();
+        overridePendingTransition(R.anim.slide_in_right,android.R.anim.slide_out_right);
     }
 
     @Override

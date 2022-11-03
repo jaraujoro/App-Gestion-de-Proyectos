@@ -94,6 +94,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="19.5dp"
                 android:onClick="OnClickForgetPassword"
+                android:textStyle="bold"
                 android:text="¿Olvidaste tu contraseña?"
                 android:textColor="@color/primaryTextColor"
                 android:textSize="15dp" />

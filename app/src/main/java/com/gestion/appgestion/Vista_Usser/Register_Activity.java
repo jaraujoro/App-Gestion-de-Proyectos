@@ -46,14 +46,14 @@ public class Register_Activity extends AppCompatActivity implements  View.OnClic
 
     public void onLoginClickBack1(View view){ //retrocede actividades con animaciones
         startActivity(new Intent(getApplicationContext(), Login_Activity.class));
+        finishAffinity();
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
-        finish();
     }
 
     public void onLoginClickBack2(View view){ //retrocede actividades con animaciones
         startActivity(new Intent(getApplicationContext(), Login_Activity.class));
+        finishAffinity();
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
-        finish();
     }
 
     @Override
