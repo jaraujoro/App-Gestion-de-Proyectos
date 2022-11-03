@@ -79,6 +79,12 @@ public class Detalle_Tablero extends AppCompatActivity{
         loadFragment(listar_tarea);
     }
 
+    @Override
+    public void onBackPressed() { //flecha del celular, animación
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
+    }
+
     private final BottomNavigationView.OnNavigationItemSelectedListener itemSelected = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {

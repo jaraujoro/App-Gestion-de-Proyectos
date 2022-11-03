@@ -25,9 +25,6 @@ public class Password_Activity extends AppCompatActivity  implements  View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password);
-        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){ //oculta la barra superior
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        }
         firebaseAuth = FirebaseAuth.getInstance();
         txtcorreo       = findViewById(R.id.textInputEmail);
         btnForgetPassword  = findViewById(R.id.btnOlvidePassword);
@@ -37,15 +34,21 @@ public class Password_Activity extends AppCompatActivity  implements  View.OnCli
     public void OnClickLoginBack(View view){ //retrocede actividades con animaciones
         startActivity(new Intent(this, Login_Activity.class));
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
-        finishAffinity();
+        finish();
     }
 
     public void OnClickRegisterBack(View view){
         startActivity(new Intent(this, Register_Activity.class));
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
-        finishAffinity();
+        finish();
     }
 
+    @Override
+    public void onBackPressed() { //flecha del celular, animación
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
+    }
 
     @Override //método onclick
     public void onClick(View view) {

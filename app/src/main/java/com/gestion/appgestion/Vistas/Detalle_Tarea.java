@@ -31,5 +31,11 @@ public class Detalle_Tarea extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() { //flecha del celular, animación
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
+    }
+
 
 }

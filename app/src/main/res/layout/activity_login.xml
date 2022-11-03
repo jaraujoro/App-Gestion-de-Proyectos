@@ -44,25 +44,35 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputEmail"
-                style="@style/parent"
-                android:layout_marginTop="@dimen/loginViewsMargin">
-
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/whiteTextColor"
+                android:layout_width="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="16dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <EditText
                     android:id="@+id/editTextEmail"
-                    style="@style/modifiedEditText"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
                     android:drawableStart="@drawable/ic_baseline_person_24"
                     android:drawablePadding="6dp"
                     android:ems="10"
                     android:hint="Correo Electrónico"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
-                    android:textSize="16dp" />
+                    android:textSize="16dp"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputPassword"
-                style="@style/parent"
-                android:layout_marginTop="@dimen/loginViewsMargin"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/whiteTextColor"
+                android:layout_width="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:passwordToggleEnabled="true">
 
                 <EditText
@@ -82,6 +92,7 @@
                 style="@style/viewParent"
                 android:layout_gravity="end"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="19.5dp"
                 android:onClick="OnClickForgetPassword"
                 android:text="¿Olvidaste tu contraseña?"
                 android:textColor="@color/primaryTextColor"

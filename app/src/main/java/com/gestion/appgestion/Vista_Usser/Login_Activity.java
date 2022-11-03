@@ -29,9 +29,6 @@ public class Login_Activity extends AppCompatActivity implements  View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        }
         setContentView(R.layout.activity_login);
         firebaseAuth = FirebaseAuth.getInstance();
         textInputEmail    = findViewById(R.id.textInputEmail);
@@ -61,19 +58,18 @@ public class Login_Activity extends AppCompatActivity implements  View.OnClickLi
     public void OnClickRegister(View view){ //retrocede actividades con animaciones
         startActivity(new Intent(this, Register_Activity.class));
         overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
-        finishAffinity();
+
     }
 
     public void OnClickRegister2(View view){ //retrocede actividades con animaciones
         startActivity(new Intent(this, Register_Activity.class));
         overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
-        finishAffinity();
+
     }
 
     public void OnClickForgetPassword(View view){
         startActivity(new Intent(this, Password_Activity.class));
         overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
-        finishAffinity();
     }
 
     public void message(String message){

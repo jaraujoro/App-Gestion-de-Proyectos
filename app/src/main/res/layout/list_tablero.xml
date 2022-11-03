@@ -31,8 +31,8 @@
                 android:layout_gravity="center"
                 android:paddingLeft="14dp"
                 android:paddingRight="14dp"
-                app:tint="#03a9f4"
-                app:srcCompat="@drawable/ic_baseline_dataset_24" />
+                app:srcCompat="@drawable/ic_baseline_dataset_24"
+                app:tint="#03a9f4" />
 
             <LinearLayout
                 android:id="@+id/linearLayour_main_tablero"
