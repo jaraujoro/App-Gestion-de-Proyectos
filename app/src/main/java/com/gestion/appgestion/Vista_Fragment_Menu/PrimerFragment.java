@@ -11,6 +11,8 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -134,6 +136,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
             titulo.setHint("Título");
             titulo.setMinEms(16);
             titulo.setInputType(InputType.TYPE_CLASS_TEXT);
+            titulo.setFilters( new InputFilter[]{new InputFilter.LengthFilter(50)});
             LinearLayout linearLayout=new LinearLayout(getContext());
             linearLayout.setOrientation(linearLayout.VERTICAL);
             linearLayout.addView(titulo);

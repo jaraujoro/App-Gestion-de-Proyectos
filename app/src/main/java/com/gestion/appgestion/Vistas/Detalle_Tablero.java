@@ -83,6 +83,7 @@ public class Detalle_Tablero extends AppCompatActivity{
     public void onBackPressed() { //flecha del celular, animación
         super.onBackPressed();
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
+        finish();
     }
 
     private final BottomNavigationView.OnNavigationItemSelectedListener itemSelected = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -107,12 +108,12 @@ public class Detalle_Tablero extends AppCompatActivity{
     }
 
 
-    @Override
+    /*@Override
     public boolean onPrepareOptionsMenu(Menu menu) { //https://developer.android.com/guide/fragments/appbar?hl=es-419
         MenuItem item = menu.findItem(R.id.favorito);
-        getFavorito(item);  //prepara el favorito
+        //getFavorito(item);  //prepara el favorito
         return super.onPrepareOptionsMenu(menu);
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) { //crea la barra de menu superior
@@ -130,9 +131,9 @@ public class Detalle_Tablero extends AppCompatActivity{
             case R.id.eliminar: //eliminar tablero
                 eliminar_tablero();
                 break;
-            case R.id.favorito: //favorito tablero
+            /*case R.id.favorito: //favorito tablero
                 guardar_favorito(item);
-                break;
+                break;*/
             case android.R.id.home: //regresa al menu principal
                 finish();
                 overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
@@ -146,7 +147,7 @@ public class Detalle_Tablero extends AppCompatActivity{
     }
 
 
-    public void guardar_favorito(MenuItem item){
+    /*public void guardar_favorito(MenuItem item){
         Map<String, Object> map = new HashMap<>();
         favorito=!favorito;
         if(favorito){
@@ -159,9 +160,9 @@ public class Detalle_Tablero extends AppCompatActivity{
             firebaseFirestore.collection("favorito").document(tablero.getId_tablero()).delete();
             item.getIcon().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.SRC_IN);
         }
-    }
+    }*/
 
-    public void getFavorito(MenuItem item){
+    /*public void getFavorito(MenuItem item){
         firebaseFirestore.collection("favorito").document(tablero.getId_tablero()).addSnapshotListener( new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
@@ -175,7 +176,7 @@ public class Detalle_Tablero extends AppCompatActivity{
                 }
             }
         });
-    }
+    }*/
 
     public void eliminar_tablero(){
         AlertDialog alertDialog = new AlertDialog.Builder(this)
@@ -198,7 +199,8 @@ public class Detalle_Tablero extends AppCompatActivity{
                     }
                 });
                 startActivity(new Intent(Detalle_Tablero.this, Menu_Activity.class).putExtra("id_usser",firebaseAuth.getCurrentUser().getUid()));
-                finish();
+                finishAffinity();
+                overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
             }}).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

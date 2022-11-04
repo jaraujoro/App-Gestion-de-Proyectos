@@ -41,11 +41,11 @@
                     android:id="@+id/btn_loading_photo"
                     android:layout_width="29dp"
                     android:layout_height="30dp"
-                    android:gravity="center_horizontal|top"
+                    android:gravity="left|top"
                     android:layout_gravity="end"
                     android:layout_marginTop="123dp"
+                    style="@style/color_camara"
                     android:foreground="@drawable/ic_baseline_camera_alt_24"
-                    android:backgroundTint="@android:color/transparent"
                     />
             </androidx.cardview.widget.CardView>
             <!---android:layout_marginBottom="35dp"-->

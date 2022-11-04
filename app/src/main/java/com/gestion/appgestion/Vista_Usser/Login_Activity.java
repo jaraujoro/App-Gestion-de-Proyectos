@@ -67,6 +67,15 @@ public class Login_Activity extends AppCompatActivity implements  View.OnClickLi
 
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        String email    = textInputEmail.getEditText().getText().toString().trim();
+        String password = textInputPassword.getEditText().getText().toString().trim();
+        textInputEmail.getEditText().setText(email);
+        textInputPassword.getEditText().setText(password);
+    }
+
     public void OnClickForgetPassword(View view){
         startActivity(new Intent(this, Password_Activity.class));
         overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
@@ -91,6 +100,7 @@ public class Login_Activity extends AppCompatActivity implements  View.OnClickLi
                         if (task.isSuccessful()) {
                             id_usser = firebaseAuth.getCurrentUser().getUid();
                             loadingBar.dismiss();
+                            overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
                             finishAffinity();
                             startActivity(new Intent(Login_Activity.this, Menu_Activity.class).putExtra("id_usser",id_usser));
                         } else {
