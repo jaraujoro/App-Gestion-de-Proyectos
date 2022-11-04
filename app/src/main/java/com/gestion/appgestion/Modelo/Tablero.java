@@ -8,13 +8,22 @@ public class Tablero implements Serializable {
     private String titulo;
     private String fecha_creación;
     private String id_usuario;
+    private boolean favorito;
 
-
-    public Tablero(String id_tablero, String titulo, String fecha_creación, String id_usuario) {
+    public Tablero(String id_tablero, String titulo, String fecha_creación, String id_usuario, boolean isLike) {
         this.id_tablero = id_tablero;
         this.titulo = titulo;
         this.fecha_creación = fecha_creación;
         this.id_usuario = id_usuario;
+        this.favorito = isLike;
+    }
+
+    public boolean isFavorito() {
+        return favorito;
+    }
+
+    public void setFavorito(boolean favorito) {
+        this.favorito = favorito;
     }
 
     public String getId_usuario() {

@@ -1,16 +1,21 @@
 package com.gestion.appgestion.Vistas;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
-
 import com.gestion.appgestion.R;
-import com.gestion.appgestion.Vista_Usser.Login_Activity;
+import com.like.LikeButton;
+import com.like.OnLikeListener;
 
-public class Detalle_Tarea extends AppCompatActivity {
+
+
+public class Detalle_Tarea extends AppCompatActivity implements OnLikeListener {
+
+    LikeButton likeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +23,13 @@ public class Detalle_Tarea extends AppCompatActivity {
         setContentView(R.layout.activity_detalle_tarea);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Detalle Tarea");
+        likeButton = findViewById(R.id.heart_button);
+        likeButton.setOnLikeListener(this);
+        likeButton.setLiked(true);
+    }
+
+    public void message(String mensaje){
+        Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -38,4 +50,13 @@ public class Detalle_Tarea extends AppCompatActivity {
     }
 
 
+    @Override
+    public void liked(LikeButton likeButton) {
+        message("registrar en la base de datos");
+    }
+
+    @Override
+    public void unLiked(LikeButton likeButton) {
+        message("eliminar en la base de datos");
+    }
 }

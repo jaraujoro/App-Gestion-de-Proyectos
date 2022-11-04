@@ -34,10 +34,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -102,6 +101,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
                         tablero.setId_tablero(document.getId());
                         tablero.setTitulo(document.getString("titulo"));
                         tablero.setFecha_creación("fecha_creacion");
+                        tablero.setFavorito(document.getBoolean("favorito"));
                         tablero.setId_usuario(String.valueOf(document.get("id_usuario")));
                         tableroList.add(tablero);
                 }
@@ -171,6 +171,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
         map.put("id_usuario", id);
         map.put("titulo",titulo);
         map.put("fecha_creacion",fecha());
+        map.put("favorito",false);
         firebaseFirestore.collection("tablero").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {

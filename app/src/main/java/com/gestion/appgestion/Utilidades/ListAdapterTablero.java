@@ -1,42 +1,27 @@
 package com.gestion.appgestion.Utilidades;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.gestion.appgestion.Modelo.Tablero;
 import com.gestion.appgestion.R;
-import com.gestion.appgestion.Vista_Usser.Register_Activity;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-
-
+import com.like.LikeButton;
+import com.like.OnLikeListener;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class ListAdapterTablero extends RecyclerView.Adapter<ListAdapterTablero.ViewHolder> {
+public class ListAdapterTablero extends RecyclerView.Adapter<ListAdapterTablero.ViewHolder>{
     private List<Tablero> tableroList;
     private LayoutInflater layoutInflater;
     private Context context;
     final ListAdapterTablero.OnItemClickListener listener;
     private FirebaseFirestore firebaseFirestore;
-    private FirebaseAuth firebaseAuth;
-    boolean favorito = false;
+    private LikeButton likeButton;
 
     public interface OnItemClickListener{
         void onItemClick(Tablero item);
@@ -56,20 +41,13 @@ public class ListAdapterTablero extends RecyclerView.Adapter<ListAdapterTablero.
         return new ListAdapterTablero.ViewHolder(view);
     }
 
-    public void message(String message){
-        Toast.makeText(context.getApplicationContext(),message,Toast.LENGTH_SHORT).show();
-    }
-
-
     @Override
     public void onBindViewHolder(@NonNull ListAdapterTablero.ViewHolder holder, int position) {
         Tablero tablero  = tableroList.get(position);
         holder.txt_titulo.setText(tablero.getTitulo());
-        holder.bindData(tableroList.get(position));
+        holder.bindData(tablero);
         firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseAuth = FirebaseAuth.getInstance();
-        favorito=true;
-        getFavorito(holder,tablero);
+        likeButton.setLiked(tablero.isFavorito());
     }
 
     @Override
@@ -77,25 +55,13 @@ public class ListAdapterTablero extends RecyclerView.Adapter<ListAdapterTablero.
         return tableroList.size();
     }
 
-    public void setItems(List<Tablero> items){
-        tableroList=items;
-    }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
-       TextView txt_titulo,txt_descripcion;
-       ImageButton btn_favorito;
+       TextView txt_titulo;
+       HashMap<String, Object> map = new HashMap<>();
        ViewHolder(View holder) {
            super(holder);
            txt_titulo = (TextView) holder.findViewById(R.id.titulo_tablero);
-           btn_favorito = (ImageButton) holder.findViewById(R.id.btn_favorito_star);
-           btn_favorito.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    Tablero tablero = tableroList.get(position);
-                    guardar_favorito(btn_favorito,tablero);
-               }
-           });
+           likeButton = (LikeButton) holder.findViewById(R.id.heart_button);
        }
        void bindData(final Tablero item ){
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -104,24 +70,43 @@ public class ListAdapterTablero extends RecyclerView.Adapter<ListAdapterTablero.
                     listener.onItemClick(item);
                 }
             });
+           likeButton.setOnLikeListener(new OnLikeListener() {
+               @Override
+               public void liked(LikeButton likeButton) {
+                   map.put("favorito", true);
+                   firebaseFirestore.collection("tablero").document(item.getId_tablero()).update(map);
+               }
+               @Override
+               public void unLiked(LikeButton likeButton) {
+                   map.put("favorito", false);
+                   firebaseFirestore.collection("tablero").document(item.getId_tablero()).update(map);
+               }
+           });
        }
     }
 
-    public void getFavorito(ListAdapterTablero.ViewHolder holder, Tablero tablero){
+    public void setItems(List<Tablero> items){
+        tableroList=items;
+    }
+}
+/*
+public void getFavorito(Tablero tablero){
         firebaseFirestore.collection("favorito").document(tablero.getId_tablero()).addSnapshotListener( new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
                 if(snapshot.getBoolean("favorito")!=null) {
-                    favorito = snapshot.getBoolean("favorito");
-                    if (favorito) {
-                        holder.btn_favorito.setImageResource(R.drawable.ic_baseline_star_rate_24_select);
+                    islike = snapshot.getBoolean("favorito");
+                    if (islike) {
+                        likeButton.setLiked(islike);
                     }
                 }
             }
         });
-    }
+}
+*/
 
-    public void guardar_favorito(ImageButton btn_favorito, Tablero tablero){
+/*
+public void guardar_favorito(ImageButton btn_favorito, Tablero tablero){
         Map<String, Object> map = new HashMap<>();
         favorito=!favorito;
         if(favorito){
@@ -135,7 +120,26 @@ public class ListAdapterTablero extends RecyclerView.Adapter<ListAdapterTablero.
             firebaseFirestore.collection("favorito").document(tablero.getId_tablero()).delete();
             btn_favorito.setImageResource(R.drawable.ic_baseline_star_rate_24);
         }
-    }
-
-
 }
+*/
+/*
+public void reference(FirebaseFirestore firebaseFirestore){
+        firebaseFirestore.collection("favorito").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if(document.getBoolean("favorito")!=null) {
+                            boolean favorito = document.getBoolean("favorito");
+                            if (favorito) {
+                                likeButton.setLiked(true);
+                            }
+                        }
+                    }
+                } else {
+                    message("Error :" + task);
+                }
+            }
+        });
+    }
+*/
