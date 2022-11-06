@@ -40,6 +40,7 @@ public class ListAdapterTarea extends RecyclerView.Adapter<ListAdapterTarea.View
     public void onBindViewHolder(@NonNull ListAdapterTarea.ViewHolder holder, int position) {
         Tarea tarea  = tareaList.get(position);
         holder.txt_titulo.setText(tarea.getTitulo());
+        holder.txt_descripcion_tarea.setText(tarea.getDescripcion());
         holder.txt_estado_tarea.setText(tarea.getEstado());
         if(tarea.getEstado().equals("Pendiente")){
             holder.txt_estado_tarea.setTextColor(Color.RED);
@@ -61,11 +62,12 @@ public class ListAdapterTarea extends RecyclerView.Adapter<ListAdapterTarea.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-       TextView txt_titulo,txt_estado_tarea;
+       TextView txt_titulo,txt_estado_tarea, txt_descripcion_tarea;
        ViewHolder(View view){
            super(view);
            txt_titulo      = (TextView) view.findViewById(R.id.titulo_tarea);
            txt_estado_tarea = (TextView) view.findViewById(R.id.estado_tarea);
+           txt_descripcion_tarea = (TextView) view.findViewById(R.id.descripcion_tarea);
        }
        void bindData(final Tarea item ){
             itemView.setOnClickListener(new View.OnClickListener() {

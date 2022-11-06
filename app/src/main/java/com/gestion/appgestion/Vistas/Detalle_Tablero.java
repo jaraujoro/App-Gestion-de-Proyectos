@@ -16,6 +16,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,12 +27,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gestion.appgestion.Utilidades.ListAdapterTablero;
 import com.gestion.appgestion.View_Detalle.Estado_tarea;
 import com.gestion.appgestion.Modelo.Tablero;
 import com.gestion.appgestion.Modelo.Tarea;
 import com.gestion.appgestion.R;
 import com.gestion.appgestion.Utilidades.ListAdapterTarea;
 import com.gestion.appgestion.View_Detalle.Listar_tarea;
+import com.gestion.appgestion.Vista_Fragment_Menu.PrimerFragment;
 import com.gestion.appgestion.Vista_Usser.Login_Activity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -59,7 +62,6 @@ import java.util.Map;
 public class Detalle_Tablero extends AppCompatActivity{
 
     private Tablero tablero;
-    private boolean favorito = false;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
     private Estado_tarea estado_tarea = new Estado_tarea();
@@ -131,9 +133,12 @@ public class Detalle_Tablero extends AppCompatActivity{
             case R.id.eliminar: //eliminar tablero
                 eliminar_tablero();
                 break;
-            /*case R.id.favorito: //favorito tablero
-                guardar_favorito(item);
-                break;*/
+            case R.id.editar_tablero:
+                showModal();
+                break;
+            case R.id.agregar_persona: //favorito tablero
+                message("agregar");
+                break;
             case android.R.id.home: //regresa al menu principal
                 finish();
                 overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
@@ -146,7 +151,45 @@ public class Detalle_Tablero extends AppCompatActivity{
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
 
+    public void showModal(){
+        final EditText titulo= new EditText(Detalle_Tablero.this);
+        titulo.setHint("Título");
+        titulo.setText(tablero.getTitulo());
+        titulo.setMinEms(16);
+        titulo.setInputType(InputType.TYPE_CLASS_TEXT);
+        titulo.setFilters( new InputFilter[]{new InputFilter.LengthFilter(50)});
+        LinearLayout linearLayout=new LinearLayout(Detalle_Tablero.this);
+        linearLayout.setOrientation(linearLayout.VERTICAL);
+        linearLayout.addView(titulo);
+        linearLayout.setPadding(70,50,70,10);
+        AlertDialog dialog = new AlertDialog.Builder(Detalle_Tablero.this)
+                .setTitle("Editar Nombre Tablero")
+                .setPositiveButton("Editar",null)
+                .setNegativeButton("Cancelar",null)
+                .setView(linearLayout)
+                .show();
+        Button positive = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positive.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View view) {
+                String titulo_tablero = titulo.getText().toString().trim();
+                if(titulo_tablero.isEmpty()){
+                    message("Complete todos los campos");
+                }else{
+                    actualizar_Tablero(titulo_tablero);
+                    dialog.dismiss();
+                }
+            }
+        });
+    }
 
+    public void actualizar_Tablero(String titulo_tablero){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("titulo",titulo_tablero);
+        firebaseFirestore.collection("tablero").document(tablero.getId_tablero()).update(map);
+        listar_tarea.refresh("Tablero: "+titulo_tablero);
+    }
     /*public void guardar_favorito(MenuItem item){
         Map<String, Object> map = new HashMap<>();
         favorito=!favorito;

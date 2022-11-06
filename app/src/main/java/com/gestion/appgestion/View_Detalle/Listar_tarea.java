@@ -1,6 +1,7 @@
 package com.gestion.appgestion.View_Detalle;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,6 +43,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +64,14 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
         args.putSerializable("class_tablero", tablero);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public Listar_tarea(){
+
+    }
+
+    public void refresh(String titulo){
+        titulo_tablero.setText(titulo);
     }
 
     @Override
@@ -120,7 +131,6 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
                 ListAdapterTarea listAdapter = new ListAdapterTarea(tareaList,getContext(), new ListAdapterTarea.OnItemClickListener() {
                     @Override
                     public void onItemClick(Tarea item) {
-                        message("click a la tarea: "+ item.getTitulo());
                         startActivity(new Intent (getActivity(), Detalle_Tarea.class).putExtra("class_tarea",item));//enviamos los datos datos del tablero a dellate_tablero
                         getActivity().overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
                     }
@@ -142,6 +152,7 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
         if(btn_agregar_tarea==view){ // https://www.youtube.com/watch?v=Kz9TkDY2sP8
             final EditText titulo= new EditText(getContext());
             final EditText descripcion= new EditText(getContext());
+            final EditText fecha_vencimiento = new EditText(getContext());
             titulo.setHint("Título");
             titulo.setMinEms(16);
             titulo.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -150,10 +161,21 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
             descripcion.setMinEms(16);
             descripcion.setInputType(InputType.TYPE_CLASS_TEXT);
             descripcion.setFilters( new InputFilter[]{new InputFilter.LengthFilter(200)});
+            fecha_vencimiento.setInputType(InputType.TYPE_CLASS_DATETIME);
+            fecha_vencimiento.setFocusable(false);
+            fecha_vencimiento.isClickable();
+            fecha_vencimiento.setHint("Fecha de vencimiento");
+            fecha_vencimiento.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showModalDatePickerDialog(fecha_vencimiento); //https://www.digitalocean.com/community/tutorials/android-date-time-picker-dialog
+                }
+            });
             LinearLayout linearLayout=new LinearLayout(getContext());
             linearLayout.setOrientation(linearLayout.VERTICAL);
             linearLayout.addView(titulo);
             linearLayout.addView(descripcion);
+            linearLayout.addView(fecha_vencimiento);
             linearLayout.setPadding(70,50,70,10);
             AlertDialog dialog = new AlertDialog.Builder(getContext())
                     .setTitle("Crear Nueva Tarea")
@@ -166,12 +188,13 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onClick(View view) {
-                    String titulo_tarea      = titulo.getText().toString().trim();
-                    String descripcion_tarea = descripcion.getText().toString().trim();
-                    if(titulo_tarea.isEmpty() || descripcion_tarea.isEmpty()){
+                    String titulo_tarea       = titulo.getText().toString().trim();
+                    String descripcion_tarea  = descripcion.getText().toString().trim();
+                    String fecha_finalizacion = fecha_vencimiento.getText().toString().trim();
+                    if(titulo_tarea.isEmpty() || descripcion_tarea.isEmpty() || fecha_finalizacion.isEmpty()){
                         message("Complete todos los campos");
                     }else{
-                        registrar_Tarea(titulo_tarea, descripcion_tarea);
+                        registrar_Tarea(titulo_tarea, descripcion_tarea,fecha_finalizacion);
                         dialog.dismiss();
                     }
                 }
@@ -179,9 +202,21 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
         }
     }
 
+    public void showModalDatePickerDialog(EditText fecha_vencimiento){
+        final Calendar c = Calendar.getInstance();
+        int anio = c.get(Calendar.YEAR);
+        int mes = c.get(Calendar.MONTH);
+        int dia = c.get(Calendar.DAY_OF_MONTH);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int anio,int mes, int dia) {
+                        fecha_vencimiento.setText(dia + "-" + (mes + 1) + "-" + anio);
+                    }},anio, mes, dia);
+        datePickerDialog.show();
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void registrar_Tarea(String titulo, String descripcion){
+    public void registrar_Tarea(String titulo, String descripcion, String fecha_finalizacion){
         Map<String, Object> map = new HashMap<>();
         map.put("id_tablero", tablero.getId_tablero());
         map.put("id_usuario", firebaseAuth.getCurrentUser().getUid());
@@ -189,7 +224,7 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
         map.put("descripcion", descripcion);
         map.put("fecha_creacion",fecha());
         map.put("fecha_inicio", "");
-        map.put("fecha_finalizacion", "");
+        map.put("fecha_finalizacion", fecha_finalizacion);
         map.put("estado", "Pendiente");
         firebaseFirestore.collection("tarea").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override

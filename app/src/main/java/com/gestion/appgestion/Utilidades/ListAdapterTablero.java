@@ -9,7 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.gestion.appgestion.Modelo.Tablero;
 import com.gestion.appgestion.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 import java.util.HashMap;
@@ -41,13 +45,26 @@ public class ListAdapterTablero extends RecyclerView.Adapter<ListAdapterTablero.
         return new ListAdapterTablero.ViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ListAdapterTablero.ViewHolder holder, int position) {
-        Tablero tablero  = tableroList.get(position);
-        holder.txt_titulo.setText(tablero.getTitulo());
-        holder.bindData(tablero);
         firebaseFirestore = FirebaseFirestore.getInstance();
+        Tablero tablero  = tableroList.get(position);
+        String texto =tablero.getTitulo();
+        texto = Character.toUpperCase(texto.charAt(0)) + texto.substring(1,texto.length());
+        holder.txt_titulo.setText(texto);
+        holder.bindData(tablero);
         likeButton.setLiked(tablero.isFavorito());
+        countTareas(holder,tablero);
+    }
+
+    public void countTareas(ViewHolder holder, Tablero tablero){
+        firebaseFirestore.collection("tarea").whereEqualTo("id_tablero", tablero.getId_tablero()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                holder.txt_cantidad_tareas.setText("Tareas("+queryDocumentSnapshots.size()+")");
+            }
+        });
     }
 
     @Override
@@ -56,11 +73,12 @@ public class ListAdapterTablero extends RecyclerView.Adapter<ListAdapterTablero.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-       TextView txt_titulo;
+       TextView txt_titulo,txt_cantidad_tareas;
        HashMap<String, Object> map = new HashMap<>();
        ViewHolder(View holder) {
            super(holder);
            txt_titulo = (TextView) holder.findViewById(R.id.titulo_tablero);
+           txt_cantidad_tareas = (TextView) holder.findViewById(R.id.cantidad_tareas);
            likeButton = (LikeButton) holder.findViewById(R.id.heart_button);
        }
        void bindData(final Tablero item ){

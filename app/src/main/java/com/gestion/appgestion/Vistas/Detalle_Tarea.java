@@ -3,19 +3,14 @@ package com.gestion.appgestion.Vistas;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.gestion.appgestion.R;
-import com.like.LikeButton;
-import com.like.OnLikeListener;
 
 
 
-public class Detalle_Tarea extends AppCompatActivity implements OnLikeListener {
+public class Detalle_Tarea extends AppCompatActivity {
 
-    LikeButton likeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +18,7 @@ public class Detalle_Tarea extends AppCompatActivity implements OnLikeListener {
         setContentView(R.layout.activity_detalle_tarea);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Detalle Tarea");
-        likeButton = findViewById(R.id.heart_button);
-        likeButton.setOnLikeListener(this);
-        likeButton.setLiked(true);
+
     }
 
     public void message(String mensaje){
@@ -49,14 +42,4 @@ public class Detalle_Tarea extends AppCompatActivity implements OnLikeListener {
         overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
     }
 
-
-    @Override
-    public void liked(LikeButton likeButton) {
-        message("registrar en la base de datos");
-    }
-
-    @Override
-    public void unLiked(LikeButton likeButton) {
-        message("eliminar en la base de datos");
-    }
 }

@@ -17,7 +17,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:orientation="horizontal"
             android:padding="6dp">
 
@@ -38,10 +38,9 @@
                 android:id="@+id/linearLayour_main_tablero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_marginStart="5dp"
                 android:layout_marginLeft="4dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="1.4dp"
                 android:layout_toRightOf="@id/task_image_tablero"
                 android:orientation="vertical">
 
@@ -54,7 +53,15 @@
                     android:text="asdasdasd"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/cantidad_tareas"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="Tareas()"
+                    android:textSize="15sp"/>
+
             </LinearLayout>
             <com.like.LikeButton
                 app:icon_type="star"

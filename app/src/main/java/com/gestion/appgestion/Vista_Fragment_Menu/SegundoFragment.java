@@ -23,7 +23,6 @@ public class SegundoFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if(getArguments()!=null){
             usuario = (Usuario) getArguments().getSerializable("usser_class");
-            Toast.makeText(getActivity(), usuario.getId(), Toast.LENGTH_SHORT).show();
         }
     }
 

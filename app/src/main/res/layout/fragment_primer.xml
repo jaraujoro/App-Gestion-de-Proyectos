@@ -8,6 +8,7 @@
     android:background="@color/login_bk_color"
     android:focusableInTouchMode="true"
     android:gravity="center"
+    android:tag="primer_fragmento"
     tools:context=".Vista_Fragment_Menu.PrimerFragment">
 
     <TextView

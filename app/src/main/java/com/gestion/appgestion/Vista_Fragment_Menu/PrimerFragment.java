@@ -74,8 +74,14 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
         firebaseFirestore = FirebaseFirestore.getInstance();
         getActivity().setTitle("Tableros");
         id = firebaseAuth.getCurrentUser().getUid();
-        listar_Tablero(view);
+        //listar_Tablero(view);
         return  view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        listar_Tablero(getView());
     }
 
     @Override
@@ -189,7 +195,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
     public String fecha(){{
         ZoneId zona = ZoneId.of("America/Lima");
         LocalDateTime localDate = LocalDateTime.now(zona);
-        DateTimeFormatter f = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String currentDate = localDate.format(f);
         return currentDate;
     }}
@@ -206,4 +212,6 @@ LocalDate localDate = LocalDate.now(zona);
 DateTimeFormatter f = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 String currentDate = localDate.format(f);
 return currentDate;
+
+HH:mm:ss
  */
