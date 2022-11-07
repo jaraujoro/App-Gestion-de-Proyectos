@@ -70,6 +70,12 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        listar_Tarea(getView());
+    }
+
     public void refresh(String titulo){
         titulo_tablero.setText(titulo);
     }
@@ -96,7 +102,7 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
         titulo_tablero = view.findViewById(R.id.titulo_tablero);
         titulo_tablero.setText("Tablero: "+tablero.getTitulo());
         count_tarea = view.findViewById(R.id.count_tarea);
-        listar_Tarea(view);
+        //listar_Tarea(view);
         return  view;
     }
 
@@ -225,7 +231,7 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
         map.put("fecha_creacion",fecha());
         map.put("fecha_inicio", "");
         map.put("fecha_finalizacion", fecha_finalizacion);
-        map.put("estado", "Pendiente");
+        map.put("estado", "No iniciada");
         firebaseFirestore.collection("tarea").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {

@@ -42,11 +42,11 @@ public class ListAdapterTarea extends RecyclerView.Adapter<ListAdapterTarea.View
         holder.txt_titulo.setText(tarea.getTitulo());
         holder.txt_descripcion_tarea.setText(tarea.getDescripcion());
         holder.txt_estado_tarea.setText(tarea.getEstado());
-        if(tarea.getEstado().equals("Pendiente")){
+        if(tarea.getEstado().equals("No iniciada")){
             holder.txt_estado_tarea.setTextColor(Color.RED);
-        }else if(tarea.getEstado().equals("Progreso")){
+        }else if(tarea.getEstado().equals("En curso")){
             holder.txt_estado_tarea.setTextColor(Color.rgb(255, 165, 0));
-        }else if(tarea.getEstado().equals("Completado")){
+        }else if(tarea.getEstado().equals("Compleada")){
             holder.txt_estado_tarea.setTextColor(Color.rgb(19, 173, 9));
         }
         holder.bindData(tareaList.get(position));
