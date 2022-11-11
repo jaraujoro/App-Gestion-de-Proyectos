@@ -1,7 +1,6 @@
 package com.gestion.appgestion.Vista_Fragment_Menu;
 
 import static android.app.Activity.RESULT_OK;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;

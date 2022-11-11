@@ -5,13 +5,11 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -38,7 +36,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -70,13 +67,7 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        listar_Tarea(getView());
-    }
-
-    public void refresh(String titulo){
+    public void setTitle(String titulo){
         titulo_tablero.setText(titulo);
     }
 
@@ -102,7 +93,7 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
         titulo_tablero = view.findViewById(R.id.titulo_tablero);
         titulo_tablero.setText("Tablero: "+tablero.getTitulo());
         count_tarea = view.findViewById(R.id.count_tarea);
-        //listar_Tarea(view);
+        listar_Tarea(view);
         return  view;
     }
 

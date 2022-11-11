@@ -1,18 +1,22 @@
 package com.gestion.appgestion.Utilidades;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import com.gestion.appgestion.Modelo.Tablero;
 import com.gestion.appgestion.R;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -50,22 +54,41 @@ public class ListAdapterTablero extends RecyclerView.Adapter<ListAdapterTablero.
     public void onBindViewHolder(@NonNull ListAdapterTablero.ViewHolder holder, int position) {
         firebaseFirestore = FirebaseFirestore.getInstance();
         Tablero tablero  = tableroList.get(position);
-        String texto =tablero.getTitulo();
-        texto = Character.toUpperCase(texto.charAt(0)) + texto.substring(1,texto.length());
-        holder.txt_titulo.setText(texto);
+        //String texto = tablero.getTitulo();
+        //texto = Character.toUpperCase(texto.charAt(0)) + texto.substring(1,texto.length());
+        //holder.txt_titulo.setText(texto);
         holder.bindData(tablero);
         likeButton.setLiked(tablero.isFavorito());
-        countTareas(holder,tablero);
+        //cargar_datos(holder,tablero);
+        cargar_datos(tablero,holder);
     }
 
-    public void countTareas(ViewHolder holder, Tablero tablero){
+    /*public void countTareas(ViewHolder holder, Tablero tablero){
         firebaseFirestore.collection("tarea").whereEqualTo("id_tablero", tablero.getId_tablero()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                holder.txt_cantidad_tareas.setText("Tareas("+queryDocumentSnapshots.size()+")");
+            }
+        });
+    }*/
+
+    public void cargar_datos(Tablero tablero, ViewHolder holder){
+        DocumentReference docRef = firebaseFirestore.collection("tablero").document(tablero.getId_tablero());
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                holder.txt_titulo.setText(documentSnapshot.getString("titulo"));
+            }
+        });
+        firebaseFirestore.collection("tarea").whereEqualTo("id_tablero", tablero.getId_tablero()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 holder.txt_cantidad_tareas.setText("Tareas("+queryDocumentSnapshots.size()+")");
             }
         });
     }
+
 
     @Override
     public int getItemCount() {
@@ -86,6 +109,9 @@ public class ListAdapterTablero extends RecyclerView.Adapter<ListAdapterTablero.
                 @Override
                 public void onClick(View view) {
                     listener.onItemClick(item);
+                    //int position = getAdapterPosition();
+                    //tableroList.remove(position);
+                    //notifyItemRemoved(position);
                 }
             });
            likeButton.setOnLikeListener(new OnLikeListener() {

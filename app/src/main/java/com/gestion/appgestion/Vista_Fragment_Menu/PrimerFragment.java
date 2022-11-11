@@ -11,7 +11,6 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -36,7 +35,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -54,6 +52,8 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
     private FirebaseFirestore firebaseFirestore;
     private ProgressDialog loadingBar;
     private String id;
+    Tablero tablero;
+    ListAdapterTablero listAdapter;
 
     public PrimerFragment(){
 
@@ -74,14 +74,12 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
         firebaseFirestore = FirebaseFirestore.getInstance();
         getActivity().setTitle("Tableros");
         id = firebaseAuth.getCurrentUser().getUid();
-        //listar_Tablero(view);
+        listar_Tablero(view);
         return  view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        listar_Tablero(getView());
+    public void Reload(){
+        getActivity().getSupportFragmentManager().beginTransaction().replace(PrimerFragment.this.getId(), new PrimerFragment()).commit();
     }
 
     @Override
@@ -103,7 +101,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        Tablero tablero = new Tablero();
+                        tablero = new Tablero();
                         tablero.setId_tablero(document.getId());
                         tablero.setTitulo(document.getString("titulo"));
                         tablero.setFecha_creación("fecha_creacion");
@@ -114,7 +112,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
             }}).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    ListAdapterTablero listAdapter = new ListAdapterTablero(tableroList, getContext(), new ListAdapterTablero.OnItemClickListener() {
+                    listAdapter = new ListAdapterTablero(tableroList, getContext(), new ListAdapterTablero.OnItemClickListener() {
                         @Override
                         public void onItemClick(Tablero item) {
                             startActivity(new Intent(getContext(), Detalle_Tablero.class).putExtra("class_tablero",item));//enviamos los datos datos del tablero a dellate_tablero

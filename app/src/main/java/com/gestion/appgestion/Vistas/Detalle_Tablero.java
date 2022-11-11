@@ -1,19 +1,13 @@
 package com.gestion.appgestion.Vistas;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -24,40 +18,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.gestion.appgestion.Utilidades.ListAdapterTablero;
 import com.gestion.appgestion.View_Detalle.Estado_tarea;
 import com.gestion.appgestion.Modelo.Tablero;
-import com.gestion.appgestion.Modelo.Tarea;
 import com.gestion.appgestion.R;
-import com.gestion.appgestion.Utilidades.ListAdapterTarea;
 import com.gestion.appgestion.View_Detalle.Listar_tarea;
 import com.gestion.appgestion.Vista_Fragment_Menu.PrimerFragment;
 import com.gestion.appgestion.Vista_Usser.Login_Activity;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class Detalle_Tablero extends AppCompatActivity{
 
@@ -66,6 +41,8 @@ public class Detalle_Tablero extends AppCompatActivity{
     private FirebaseAuth firebaseAuth;
     private Estado_tarea estado_tarea = new Estado_tarea();
     private Listar_tarea listar_tarea = new Listar_tarea();
+    private PrimerFragment primerFragment = new PrimerFragment();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,8 +104,10 @@ public class Detalle_Tablero extends AppCompatActivity{
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.option_exit: //cerrar sesion
+                FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(getApplicationContext(), Login_Activity.class));
                 finish();
+                overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
                 break;
             case R.id.eliminar: //eliminar tablero
                 eliminar_tablero();
@@ -188,7 +167,8 @@ public class Detalle_Tablero extends AppCompatActivity{
         HashMap<String, Object> map = new HashMap<>();
         map.put("titulo",titulo_tablero);
         firebaseFirestore.collection("tablero").document(tablero.getId_tablero()).update(map);
-        listar_tarea.refresh("Tablero: "+titulo_tablero);
+        listar_tarea.setTitle("Tablero: "+titulo_tablero);
+        tablero.setTitulo(titulo_tablero);
     }
     /*public void guardar_favorito(MenuItem item){
         Map<String, Object> map = new HashMap<>();
