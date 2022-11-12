@@ -1,6 +1,7 @@
 package com.gestion.appgestion.Vistas;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -23,13 +24,14 @@ import com.gestion.appgestion.View_Detalle.Estado_tarea;
 import com.gestion.appgestion.Modelo.Tablero;
 import com.gestion.appgestion.R;
 import com.gestion.appgestion.View_Detalle.Listar_tarea;
-import com.gestion.appgestion.Vista_Fragment_Menu.PrimerFragment;
 import com.gestion.appgestion.Vista_Usser.Login_Activity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
@@ -41,7 +43,6 @@ public class Detalle_Tablero extends AppCompatActivity{
     private FirebaseAuth firebaseAuth;
     private Estado_tarea estado_tarea = new Estado_tarea();
     private Listar_tarea listar_tarea = new Listar_tarea();
-    private PrimerFragment primerFragment = new PrimerFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,7 +169,6 @@ public class Detalle_Tablero extends AppCompatActivity{
         map.put("titulo",titulo_tablero);
         firebaseFirestore.collection("tablero").document(tablero.getId_tablero()).update(map);
         listar_tarea.setTitle("Tablero: "+titulo_tablero);
-        tablero.setTitulo(titulo_tablero);
     }
     /*public void guardar_favorito(MenuItem item){
         Map<String, Object> map = new HashMap<>();
@@ -203,31 +203,35 @@ public class Detalle_Tablero extends AppCompatActivity{
 
     public void eliminar_tablero(){
         AlertDialog alertDialog = new AlertDialog.Builder(this)
-        .setIcon(android.R.drawable.ic_dialog_alert)
+        .setIcon(R.drawable.ic_baseline_delete_24_alert)
         .setTitle("Eliminar tablero")
         .setMessage("¿Quieres eliminar el tablero?\nSe eliminaran todas la tareas.\nTablero: "+tablero.getTitulo())
         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 firebaseFirestore.collection("tablero").document(tablero.getId_tablero()).delete();
-                firebaseFirestore.collection("favorito").document(tablero.getId_tablero()).delete();
-                firebaseFirestore.collection("tarea").whereEqualTo("id_tablero", tablero.getId_tablero()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                firebaseFirestore.collection("tarea").document(document.getId()).delete();
-                            }
-                        }
-                    }
-                });
+                eliminar_tareas();
                 startActivity(new Intent(Detalle_Tablero.this, Menu_Activity.class).putExtra("id_usser",firebaseAuth.getCurrentUser().getUid()));
-                finishAffinity();
+                finish();
                 overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
             }}).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
             }}).show();
+    }
+
+    public void eliminar_tareas(){
+        Query query = firebaseFirestore.collection("tarea").whereEqualTo("id_tablero", tablero.getId_tablero());
+        ListenerRegistration registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                for (QueryDocumentSnapshot document : value) {
+                    firebaseFirestore.collection("tarea").document(document.getId()).delete();
+                }
+            }
+
+        });
+        registration.remove();
     }
 
 }

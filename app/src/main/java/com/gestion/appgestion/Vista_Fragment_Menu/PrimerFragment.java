@@ -74,7 +74,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
         firebaseFirestore = FirebaseFirestore.getInstance();
         getActivity().setTitle("Tableros");
         id = firebaseAuth.getCurrentUser().getUid();
-        listar_Tablero(view);
+        listar_Tablero();
         return  view;
     }
 
@@ -85,7 +85,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        listar_Tablero(getView());
+        listar_Tablero();
     }
 
     public void progress(String mensaje){
@@ -95,11 +95,11 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
         loadingBar.show();
     }
 
-    public void listar_Tablero(View view){//https://www.youtube.com/watch?v=Mne2SrtySME
-        tableroList = new ArrayList<>();
+    public void listar_Tablero(){//https://www.youtube.com/watch?v=Mne2SrtySME
         firebaseFirestore.collection("tablero").whereEqualTo("id_usuario", id ).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                tableroList = new ArrayList<>();
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         tablero = new Tablero();
                         tablero.setId_tablero(document.getId());
@@ -119,7 +119,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
                             getActivity().overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
                         }
                     });
-                    RecyclerView recyclerView = view.findViewById(R.id.listRecycleView_tablero);
+                    RecyclerView recyclerView = getView().findViewById(R.id.listRecycleView_tablero);
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                     recyclerView.setAdapter(listAdapter);
@@ -179,7 +179,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
         firebaseFirestore.collection("tablero").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
-                listar_Tablero(getView());
+                listar_Tablero();
                 message("Se ha creado un tablero.");
             }}).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -212,4 +212,39 @@ String currentDate = localDate.format(f);
 return currentDate;
 
 HH:mm:ss
- */
+
+
+ /*public void listar_Tablero(){
+        /*CollectionReference tableros = firebaseFirestore.collection("tablero");
+        tableros.orderBy("fecha_creacion", Query.Direction.DESCENDING);
+        tableros.whereEqualTo("id_usuario",id);
+        firebaseFirestore.collection("tablero").whereEqualTo("id_usuario",id).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
+                tableroList = new ArrayList<>();
+                for (QueryDocumentSnapshot document : value) {
+                    tablero = new Tablero();
+                    tablero.setId_tablero(document.getId());
+                    tablero.setTitulo(document.getString("titulo"));
+                    tablero.setFecha_creación("fecha_creacion");
+                    tablero.setFavorito(document.getBoolean("favorito"));
+                    tablero.setId_usuario(String.valueOf(document.get("id_usuario")));
+                    tableroList.add(tablero);
+                }
+                listAdapter = new ListAdapterTablero(tableroList, getContext(), new ListAdapterTablero.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(Tablero item) {
+                        startActivity(new Intent(getContext(), Detalle_Tablero.class).putExtra("class_tablero",item));//enviamos los datos datos del tablero a dellate_tablero
+                        getActivity().overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
+                    }
+                });
+                RecyclerView recyclerView = getView().findViewById(R.id.listRecycleView_tablero);
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setAdapter(listAdapter);
+                if(listAdapter.getItemCount()<=0){
+                    resultado.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }*/
