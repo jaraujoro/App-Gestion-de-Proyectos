@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,99 +8,149 @@
     android:focusableInTouchMode="true"
     tools:context=".Vistas.Detalle_Tarea">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/titulo_detalle_tarea"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Titutlo"
-        app:boxStrokeColor="@color/black"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/descripcion_detalle_tarea"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Descripción"
-        app:boxStrokeColor="@color/black"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:lines="6"
-            android:gravity="top"
-            android:overScrollMode="always"
-            android:scrollbars="vertical"
-            android:scrollbarStyle="insideInset"
-            android:scrollHorizontally="false" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:hint="Seleccione una opcion"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-        <AutoCompleteTextView
-            android:id="@+id/select_progreso"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="none"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_modal_comprobacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="abrir modal"/>
+
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="195.1dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Fecha de inicio"
-            android:layout_marginEnd="3dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:hint="Tituto"
             app:boxStrokeColor="@color/black">
+
             <EditText
-                android:id="@+id/txt_detalle_tarea_fecha_inicio"
+                android:id="@+id/titulo_detalle_tarea"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="date"
-                android:focusable="false"
-                android:clickable="true"/>
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="195.1dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Fecha de vencimiento"
-            android:layout_marginStart="3dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="16dp"
+            android:hint="Descripción"
             app:boxStrokeColor="@color/black">
+
             <EditText
-                android:id="@+id/txt_detalle_tarea_fecha_vencimiento"
+                android:id="@+id/descripcion_detalle_tarea"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="date"
-                android:focusable="false"
-                android:clickable="true"/>
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:lines="6"
+                android:overScrollMode="always"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical"
+                android:scrollHorizontally="false" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:hint="Seleccione una opción">
+
+            <AutoCompleteTextView
+                android:id="@+id/select_progreso"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="186dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="3dp"
+                android:hint="Fecha de inicio"
+                app:boxStrokeColor="@color/black">
+
+                <EditText
+                    android:id="@+id/txt_detalle_tarea_fecha_inicio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:inputType="date" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="186dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:hint="Fecha de vencimiento"
+                app:boxStrokeColor="@color/black">
+
+                <EditText
+                    android:id="@+id/txt_detalle_tarea_fecha_vencimiento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:inputType="date" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:weightSum="12">
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="5.2"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/black" />
+            <TextView
+                style="@style/viewParent.headerText.NoMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lista de Comprobación"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="5.2"
+                android:background="@color/black" />
+        </LinearLayout>
     </LinearLayout>
 
 
 
-</LinearLayout>
+</RelativeLayout>
