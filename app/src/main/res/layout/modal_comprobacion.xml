@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="60dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="100dp"
             android:orientation="vertical">
@@ -27,6 +27,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"/>
         </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="380dp"
+        android:layout_height="600dp"
+        android:id="@+id/txt_informacion"
+        android:visibility="invisible"
+        tools:ignore="MissingConstraints">
+        <TextView
+            android:layout_width="380dp"
+            android:layout_height="600dp"
+            android:text="No hay información."
+            android:textSize="18sp"
+            android:gravity="center"
+            android:textColor="@color/black"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

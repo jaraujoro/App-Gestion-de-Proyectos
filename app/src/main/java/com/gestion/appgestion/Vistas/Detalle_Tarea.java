@@ -1,11 +1,10 @@
 package com.gestion.appgestion.Vistas;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,28 +13,19 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.gestion.appgestion.Modelo.Comprobacion;
-import com.gestion.appgestion.Modelo.Tablero;
 import com.gestion.appgestion.Modelo.Tarea;
 import com.gestion.appgestion.R;
-import com.gestion.appgestion.Utilidades.ListAdapterComprobacion;
-import com.gestion.appgestion.Utilidades.ListAdapterTablero;
 import com.gestion.appgestion.Utilidades.ModalComprobacion;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Detalle_Tarea extends AppCompatActivity implements View.OnClickListener{
@@ -43,13 +33,11 @@ public class Detalle_Tarea extends AppCompatActivity implements View.OnClickList
     private AutoCompleteTextView autoCompleteTextView;
     private ArrayAdapter<String> adapterItems;
     private FirebaseFirestore firebaseFirestore;
-    private FirebaseAuth firebaseAuth;
     private String[] estado  = {"No iniciada","En curso","Completada"};
     private Tarea tarea;
-    private EditText txt_detalle_tarea_fecha_inicio,txt_detalle_tarea_fecha_vencimiento,descripcion_detalle_tarea,titulo_detalle_tarea;
+    private EditText txt_detalle_tarea_fecha_inicio,txt_detalle_tarea_fecha_vencimiento,descripcion_detalle_tarea,titulo_detalle_tarea,txt_agregar_comprobacion;
     private Map<String, Object> map = new HashMap<>();
-    private List<Comprobacion> comprobacionList;
-    private Button btn_modal_comprobacion;
+    private Button btn_modal_comprobacion,btn_guardar_comprobacion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,19 +47,20 @@ public class Detalle_Tarea extends AppCompatActivity implements View.OnClickList
         getSupportActionBar().setTitle("Detalle Tarea");
         tarea                     = (Tarea) getIntent().getSerializableExtra("class_tarea");
         firebaseFirestore         = FirebaseFirestore.getInstance();
-        firebaseAuth              = FirebaseAuth.getInstance();
         autoCompleteTextView      = findViewById(R.id.select_progreso);
         adapterItems              =  new ArrayAdapter<String>(this,R.layout.list_select_progreso,estado);
         descripcion_detalle_tarea = findViewById(R.id.descripcion_detalle_tarea);
         titulo_detalle_tarea      = findViewById(R.id.titulo_detalle_tarea);
         txt_detalle_tarea_fecha_inicio      =  findViewById(R.id.txt_detalle_tarea_fecha_inicio);
         txt_detalle_tarea_fecha_vencimiento =  findViewById(R.id.txt_detalle_tarea_fecha_vencimiento);
+        txt_agregar_comprobacion = findViewById(R.id.txt_agregar_comprobacion);
         txt_detalle_tarea_fecha_inicio.setOnClickListener(this);
         txt_detalle_tarea_fecha_vencimiento.setOnClickListener(this);
-        btn_modal_comprobacion = findViewById(R.id.btn_modal_comprobacion);
+        btn_modal_comprobacion   = findViewById(R.id.btn_modal_comprobacion);
         btn_modal_comprobacion.setOnClickListener(this);
+        btn_guardar_comprobacion = findViewById(R.id.btn_guardar_comprobacion);
+        btn_guardar_comprobacion.setOnClickListener(this);
         autoCompleteTextView.setAdapter(adapterItems);
-
         Cargar_datos();
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -100,20 +89,43 @@ public class Detalle_Tarea extends AppCompatActivity implements View.OnClickList
                 return false;
             }
         });
+        txt_agregar_comprobacion.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String comprobacion = txt_agregar_comprobacion.getText().toString().trim();
+                btn_guardar_comprobacion.setEnabled(!comprobacion.isEmpty());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
-    /*public void list_comprobacion(){
-        comprobacionList = new ArrayList<>();
-        comprobacionList.add(new Comprobacion("d13"));
-        comprobacionList.add(new Comprobacion("123d13"));
-        comprobacionList.add(new Comprobacion("d112"));
-        comprobacionList.add(new Comprobacion("3d32"));
-        ListAdapterComprobacion listAdapter = new ListAdapterComprobacion(comprobacionList,this);
-        RecyclerView recyclerView = findViewById(R.id.lista_recicleview_comprobacion);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(listAdapter);
-    }*/
+    public void guardar_comprobante(){
+        if(!txt_agregar_comprobacion.getText().toString().trim().equals("")){
+            map.put("id_tarea", tarea.getId());
+            map.put("titulo", txt_agregar_comprobacion.getText().toString());
+            map.put("realizado",false);
+            firebaseFirestore.collection("comprobacion").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    txt_agregar_comprobacion.setText("");
+                    message("Se agregó una comprobación.");
+                }}).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    message("Error al registrar.");
+                }
+            });
+        }
+    }
 
     public void longitud_texto(){
         String length_titulo = titulo_detalle_tarea.getText().toString();
@@ -164,12 +176,14 @@ public class Detalle_Tarea extends AppCompatActivity implements View.OnClickList
     @Override
     public void onBackPressed() { //flecha del celular, animación
         super.onBackPressed();
-        overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
+        finish();
         longitud_texto();
+        overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
     }
 
     @Override
     public void onClick(View view) {
+
         if(txt_detalle_tarea_fecha_inicio==view){
             final Calendar c = Calendar.getInstance();
             int anio         = c.get(Calendar.YEAR);
@@ -185,6 +199,7 @@ public class Detalle_Tarea extends AppCompatActivity implements View.OnClickList
                 }},anio, mes, dia);
             datePickerDialog.show();
         }
+
         if(txt_detalle_tarea_fecha_vencimiento==view){
             final Calendar c = Calendar.getInstance();
             int anio         = c.get(Calendar.YEAR);
@@ -202,9 +217,13 @@ public class Detalle_Tarea extends AppCompatActivity implements View.OnClickList
         }
 
         if(btn_modal_comprobacion==view){
-            ModalComprobacion modalComprobacion = new ModalComprobacion();
+            ModalComprobacion modalComprobacion = new ModalComprobacion(tarea);
             modalComprobacion.show(getSupportFragmentManager(),"MyFragment");
-            //list_comprobacion();
         }
+
+        if(btn_guardar_comprobacion==view){
+            guardar_comprobante();
+        }
+
     }
 }

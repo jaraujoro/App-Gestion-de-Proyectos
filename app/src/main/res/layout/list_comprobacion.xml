@@ -22,14 +22,14 @@
             android:padding="6dp">
 
             <CheckBox
-                android:id="@+id/btn_radio_buton_comprobacion"
+                android:id="@+id/btn_check_comprobacion"
                 android:layout_width="wrap_content"
-                android:layout_height="70dp"/>
+                android:layout_height="70dp" />
 
             <LinearLayout
                 android:id="@+id/linearlayout_comprobacion"
                 android:layout_marginLeft="4dp"
-                android:layout_toRightOf="@id/btn_radio_buton_comprobacion"
+                android:layout_toRightOf="@id/btn_check_comprobacion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
