@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,9 +31,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.time.LocalDateTime;
@@ -136,38 +141,31 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View event) { // https://stackoverflow.com/questions/3426917/how-to-add-two-edit-text-fields-in-an-alert-dialog
         if(btn_agregar_tablero==event){ // https://www.youtube.com/watch?v=Kz9TkDY2sP8
-            final EditText titulo= new EditText(getContext());
-            titulo.setHint("Título");
-            titulo.setMinEms(16);
-            titulo.setInputType(InputType.TYPE_CLASS_TEXT);
-            titulo.setFilters( new InputFilter[]{new InputFilter.LengthFilter(50)});
-            LinearLayout linearLayout=new LinearLayout(getContext());
-            linearLayout.setOrientation(linearLayout.VERTICAL);
-            linearLayout.addView(titulo);
-            linearLayout.setPadding(70,50,70,10);
-            AlertDialog dialog = new AlertDialog.Builder(getContext())
-                    .setTitle("Crear Nuevo Tablero")
-                    .setPositiveButton("Aceptar",null)
-                    .setNegativeButton("Cancelar",null)
-                    .setView(linearLayout)
-                    .show();
+            LayoutInflater inflater = getLayoutInflater();
+            View alertLayout = inflater.inflate(R.layout.modal_agregar_tablero, null);
+            EditText titulo = alertLayout.findViewById(R.id.dialog_titulo_tablero);
+            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+            alert.setTitle("Crear Nuevo Tablero");
+            alert.setView(alertLayout);
+            alert.setNegativeButton("Cancelar",null);
+            alert.setPositiveButton( "Aceptar",null); //https://www.youtube.com/watch?v=veOZTvAdzJ8
+            AlertDialog dialog = alert.create();
+            dialog.show();
             Button positive = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             positive.setOnClickListener(new View.OnClickListener() {
-                @RequiresApi(api = Build.VERSION_CODES.O)
-                @Override
-                public void onClick(View view) {
-                    String titulo_tablero      = titulo.getText().toString().trim();
-                    if(titulo_tablero.isEmpty()){
-                        message("Complete todos los campos");
-                    }else{
-                        registrar_Tablero(titulo_tablero);
-                        dialog.dismiss();
-                    }
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View view) {
+                String titulo_tablero      = titulo.getText().toString().trim();
+                if(titulo_tablero.isEmpty()){
+                    message("Complete todos los campos");
+                }else{
+                    registrar_Tablero(titulo_tablero);
+                    dialog.dismiss();
                 }
-            });
+            }});
         }
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void registrar_Tablero(String titulo){ //cada tablero pertenece a un usuario
@@ -247,4 +245,5 @@ HH:mm:ss
                 }
             }
         });
+ https://android.pcsalt.com/create-alertdialog-with-custom-layout-using-xml-layout/
     }*/

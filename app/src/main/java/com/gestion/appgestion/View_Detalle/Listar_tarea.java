@@ -35,6 +35,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.time.LocalDate;
@@ -185,54 +186,39 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         if(btn_agregar_tarea==view){ // https://www.youtube.com/watch?v=Kz9TkDY2sP8
-            final EditText titulo= new EditText(getContext());
-            final EditText descripcion= new EditText(getContext());
-            final EditText fecha_vencimiento = new EditText(getContext());
-            titulo.setHint("Título");
-            titulo.setMinEms(16);
-            titulo.setInputType(InputType.TYPE_CLASS_TEXT);
-            titulo.setFilters( new InputFilter[]{new InputFilter.LengthFilter(50)});
-            descripcion.setHint("Descripción");
-            descripcion.setMinEms(16);
-            descripcion.setInputType(InputType.TYPE_CLASS_TEXT);
-            descripcion.setFilters( new InputFilter[]{new InputFilter.LengthFilter(200)});
-            fecha_vencimiento.setInputType(InputType.TYPE_CLASS_DATETIME);
-            fecha_vencimiento.setFocusable(false);
-            fecha_vencimiento.isClickable();
-            fecha_vencimiento.setHint("Fecha de vencimiento");
+            LayoutInflater inflater = getLayoutInflater();
+            View alertLayout = inflater.inflate(R.layout.modal_agregar_tarea, null);
+            EditText titulo_tarea      = alertLayout.findViewById(R.id.dialog_descripcion_tarea);
+            EditText descripcion_tarea = alertLayout.findViewById(R.id.dialog_descripcion_tarea);
+            EditText fecha_vencimiento = alertLayout.findViewById(R.id.dialog_fecha_tarea);
             fecha_vencimiento.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showModalDatePickerDialog(fecha_vencimiento); //https://www.digitalocean.com/community/tutorials/android-date-time-picker-dialog
+                    showModalDatePickerDialog(fecha_vencimiento);
                 }
             });
-            LinearLayout linearLayout=new LinearLayout(getContext());
-            linearLayout.setOrientation(linearLayout.VERTICAL);
-            linearLayout.addView(titulo);
-            linearLayout.addView(descripcion);
-            linearLayout.addView(fecha_vencimiento);
-            linearLayout.setPadding(70,50,70,10);
-            AlertDialog dialog = new AlertDialog.Builder(getContext())
-                    .setTitle("Crear Nueva Tarea")
-                    .setPositiveButton("Aceptar",null)
-                    .setNegativeButton("Cancelar",null)
-                    .setView(linearLayout)
-                    .show();
+            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+            alert.setTitle("Crear Tarea");
+            alert.setView(alertLayout);
+            alert.setNegativeButton("Cancelar",null);
+            alert.setPositiveButton( "Aceptar",null);
+            AlertDialog dialog = alert.create();
+            dialog.show();
             Button positive = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             positive.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View view) {
-                String titulo_tarea       = titulo.getText().toString().trim();
-                String descripcion_tarea  = descripcion.getText().toString().trim();
-                String fecha_finalizacion = fecha_vencimiento.getText().toString().trim();
-                if(titulo_tarea.isEmpty() || descripcion_tarea.isEmpty() || fecha_finalizacion.isEmpty()){
-                    message("Complete todos los campos");
-                }else{
-                    registrar_Tarea(titulo_tarea, descripcion_tarea,fecha_finalizacion);
-                    dialog.dismiss();
-                }
-            }});
+                @RequiresApi(api = Build.VERSION_CODES.O)
+                @Override
+                public void onClick(View view) {
+                    String titulo     = titulo_tarea.getText().toString().trim();
+                    String descripcion  = descripcion_tarea.getText().toString().trim();
+                    String fecha_finalizacion = fecha_vencimiento.getText().toString().trim();
+                    if(titulo.isEmpty() || descripcion.isEmpty() || fecha_finalizacion.isEmpty()){
+                        message("Complete todos los campos.");
+                    }else{
+                        registrar_Tarea(titulo, descripcion,fecha_finalizacion);
+                        dialog.dismiss();
+                    }
+                }});
         }
     }
 
