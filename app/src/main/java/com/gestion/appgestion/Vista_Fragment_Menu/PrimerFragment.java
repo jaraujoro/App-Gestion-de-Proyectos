@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
@@ -44,6 +45,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -172,7 +174,7 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
         Map<String, Object> map = new HashMap<>();
         map.put("id_usuario", id);
         map.put("titulo",titulo);
-        map.put("fecha_creacion",fecha());
+        map.put("fecha_creacion",new Timestamp(new Date()));
         map.put("favorito",false);
         firebaseFirestore.collection("tablero").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override

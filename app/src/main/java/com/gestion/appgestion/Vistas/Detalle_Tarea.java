@@ -1,6 +1,7 @@
 package com.gestion.appgestion.Vistas;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -38,6 +39,7 @@ public class Detalle_Tarea extends AppCompatActivity implements View.OnClickList
     private EditText txt_detalle_tarea_fecha_inicio,txt_detalle_tarea_fecha_vencimiento,descripcion_detalle_tarea,titulo_detalle_tarea,txt_agregar_comprobacion;
     private Map<String, Object> map = new HashMap<>();
     private Button btn_modal_comprobacion,btn_guardar_comprobacion;
+    private ProgressDialog loadingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +110,15 @@ public class Detalle_Tarea extends AppCompatActivity implements View.OnClickList
         });
     }
 
+    public void progress(String mensaje){
+        loadingBar=new ProgressDialog(this);
+        loadingBar.setMessage(mensaje);
+        loadingBar.setCanceledOnTouchOutside(false);
+        loadingBar.show();
+    }
+
     public void guardar_comprobante(){
+        progress("Guardando.....");
         if(!txt_agregar_comprobacion.getText().toString().trim().equals("")){
             map.put("id_tarea", tarea.getId());
             map.put("titulo", txt_agregar_comprobacion.getText().toString());
@@ -118,6 +128,7 @@ public class Detalle_Tarea extends AppCompatActivity implements View.OnClickList
                 public void onSuccess(DocumentReference documentReference) {
                     txt_agregar_comprobacion.setText("");
                     message("Se agregó una comprobación.");
+                    loadingBar.dismiss();
                 }}).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
