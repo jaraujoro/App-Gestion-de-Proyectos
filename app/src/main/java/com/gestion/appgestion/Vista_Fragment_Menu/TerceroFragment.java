@@ -2,15 +2,21 @@ package com.gestion.appgestion.Vista_Fragment_Menu;
 
 import static android.app.Activity.RESULT_OK;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.Toast;
 import com.gestion.appgestion.Modelo.Usuario;
@@ -25,6 +31,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.HashMap;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -38,7 +47,7 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
     private String storage_path = "user_photo/";
     private static final int COD_SEL_IMAGE = 300;
     private Uri image_url;
-    private String photo = "photo";
+    private String photo = "image_user";
     private ProgressDialog loadingBar;
     private TextInputLayout txtNombre,txtDni,txtEmail,txtPassword,txtNumeroTelefono;
     private Usuario usuario;
@@ -110,6 +119,7 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(resultCode == RESULT_OK){
@@ -150,9 +160,28 @@ public class TerceroFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    private String getfileExtension(Uri uri){
+        String extension;
+        ContentResolver contentResolver = getContext().getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        extension= mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+        return extension; //obtener la extención del archivo .*
+    }
+
+    public String nombreArchivo(){
+        final Calendar c = Calendar.getInstance();
+        int anio         = c.get(Calendar.YEAR);
+        int mes          = c.get(Calendar.MONTH);
+        int dia          = c.get(Calendar.DAY_OF_MONTH);
+        int hora         = c.get(Calendar.HOUR_OF_DAY);
+        int seg       = c.get(Calendar.SECOND);
+        return dia+""+mes+""+anio+"_"+hora+""+seg+"_"+(int) (Math.random()*80+10);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void uploadPhoto(Uri image_url) {
         progress("Actualizando foto de perfil....");
-        String rute_storage_photo = storage_path+" "+photo+" "+firebaseAuth.getUid();
+        String rute_storage_photo = storage_path+photo+"_"+nombreArchivo();
         StorageReference riversRef = storageReference.child(rute_storage_photo);
         riversRef.putFile(image_url).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override

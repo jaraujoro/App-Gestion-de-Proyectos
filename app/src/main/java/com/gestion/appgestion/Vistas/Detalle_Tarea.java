@@ -23,9 +23,11 @@ import com.gestion.appgestion.R;
 import com.gestion.appgestion.Utilidades.ModalComprobacion;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -123,6 +125,7 @@ public class Detalle_Tarea extends AppCompatActivity implements View.OnClickList
             map.put("id_tarea", tarea.getId());
             map.put("titulo", txt_agregar_comprobacion.getText().toString());
             map.put("realizado",false);
+            map.put("fecha_creacion",new Timestamp(new Date()));
             firebaseFirestore.collection("comprobacion").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {

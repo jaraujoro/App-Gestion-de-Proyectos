@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import com.gestion.appgestion.Vistas.Detalle_Tarea;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
@@ -43,6 +45,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +54,7 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
 
     private Tablero tablero;
     private Tarea tarea;
-    private List<Tarea> tareaList;
+    private List<Tarea> tareaList = new ArrayList<>();;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
     private FloatingActionButton btn_agregar_tarea;
@@ -105,12 +108,12 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
         listar_Tarea();
     }
 
-
-    public void listar_Tarea(){
-        firebaseFirestore.collection("tarea").whereEqualTo("id_tablero",tablero.getId_tablero()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+    /*public void listar_Tarea(){
+        Query docRef = firebaseFirestore.collection("tarea").orderBy("fecha_creacion", Query.Direction.DESCENDING).whereEqualTo("id_tablero", tablero.getId_tablero());
+        docRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
-                tareaList = new ArrayList<>();
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                tareaList.clear();
                 for (QueryDocumentSnapshot document : value) {
                     tarea = new Tarea();
                     tarea.setId(document.getId());
@@ -118,7 +121,43 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
                     tarea.setId_usuario(document.getString("id_usuario"));
                     tarea.setTitulo(document.getString("titulo"));
                     tarea.setDescripcion(document.getString("descripcion"));
-                    tarea.setFecha_creacion(document.getString("fecha_creacion"));
+                    tarea.setFecha_creacion(String.valueOf(document.getDate("fecha_creacion")));
+                    tarea.setFecha_inicio(document.getString("fecha_inicio"));
+                    tarea.setFecha_finalizacion(document.getString("fecha_finalizacion"));
+                    tarea.setEstado(document.getString("estado"));
+                    tareaList.add(tarea);
+                }
+                ListAdapterTarea listAdapter = new ListAdapterTarea(tareaList,getContext(), new ListAdapterTarea.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(Tarea item) {
+                        startActivity(new Intent (getActivity(), Detalle_Tarea.class).putExtra("class_tarea",item));//enviamos los datos datos del tablero a dellate_tablero
+                        getActivity().overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
+                    }
+                });
+                RecyclerView recyclerView = getView().findViewById(R.id.listRecycleView_tarea);
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setAdapter(listAdapter);
+                if(listAdapter.getItemCount()<=0){
+                    count_tarea.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }*/
+
+    public void listar_Tarea(){
+        firebaseFirestore.collection("tarea").orderBy("fecha_creacion", Query.Direction.DESCENDING).whereEqualTo("id_tablero",tablero.getId_tablero()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
+                tareaList.clear();
+                for (QueryDocumentSnapshot document : value) {
+                    tarea = new Tarea();
+                    tarea.setId(document.getId());
+                    tarea.setId_tablero(document.getString("id_tablero"));
+                    tarea.setId_usuario(document.getString("id_usuario"));
+                    tarea.setTitulo(document.getString("titulo"));
+                    tarea.setDescripcion(document.getString("descripcion"));
+                    tarea.setFecha_creacion(String.valueOf(document.getDate("fecha_creacion")));
                     tarea.setFecha_inicio(document.getString("fecha_inicio"));
                     tarea.setFecha_finalizacion(document.getString("fecha_finalizacion"));
                     tarea.setEstado(document.getString("estado"));
@@ -242,7 +281,7 @@ public class Listar_tarea extends Fragment implements View.OnClickListener {
         map.put("id_usuario", firebaseAuth.getCurrentUser().getUid());
         map.put("titulo", titulo);
         map.put("descripcion", descripcion);
-        map.put("fecha_creacion",fecha());
+        map.put("fecha_creacion",new Timestamp(new Date()));
         map.put("fecha_inicio", "");
         map.put("fecha_finalizacion", fecha_finalizacion);
         map.put("estado", "No iniciada");

@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -132,36 +133,31 @@ public class Detalle_Tablero extends AppCompatActivity{
     }
 
     public void showModal(){
-        final EditText titulo= new EditText(Detalle_Tablero.this);
-        titulo.setHint("Título");
+        LayoutInflater inflater = getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.modal_agregar_tablero, null);
+        EditText titulo = alertLayout.findViewById(R.id.dialog_titulo_tablero);
         titulo.setText(tablero.getTitulo());
-        titulo.setMinEms(16);
-        titulo.setInputType(InputType.TYPE_CLASS_TEXT);
-        titulo.setFilters( new InputFilter[]{new InputFilter.LengthFilter(50)});
-        LinearLayout linearLayout=new LinearLayout(Detalle_Tablero.this);
-        linearLayout.setOrientation(linearLayout.VERTICAL);
-        linearLayout.addView(titulo);
-        linearLayout.setPadding(70,50,70,10);
-        AlertDialog dialog = new AlertDialog.Builder(Detalle_Tablero.this)
-                .setTitle("Editar Nombre Tablero")
-                .setPositiveButton("Editar",null)
-                .setNegativeButton("Cancelar",null)
-                .setView(linearLayout)
-                .show();
+        AlertDialog.Builder alert = new AlertDialog.Builder(Detalle_Tablero.this);
+        alert.setTitle("Editar Tablero");
+        alert.setView(alertLayout);
+        alert.setNegativeButton("Cancelar",null);
+        alert.setPositiveButton( "Aceptar",null); //https://www.youtube.com/watch?v=veOZTvAdzJ8
+        AlertDialog dialog = alert.create();
+        dialog.show();
         Button positive = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
         positive.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View view) {
-                String titulo_tablero = titulo.getText().toString().trim();
-                if(titulo_tablero.isEmpty()){
-                    message("Complete todos los campos");
-                }else{
-                    actualizar_Tablero(titulo_tablero);
-                    dialog.dismiss();
-                }
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        public void onClick(View view) {
+            String titulo_tablero  = titulo.getText().toString().trim();
+            if(titulo_tablero.isEmpty()){
+                message("Complete todos los campos");
+            }else{
+                actualizar_Tablero(titulo_tablero);
+                dialog.dismiss();
             }
-        });
+        }});
+
     }
 
     public void actualizar_Tablero(String titulo_tablero){

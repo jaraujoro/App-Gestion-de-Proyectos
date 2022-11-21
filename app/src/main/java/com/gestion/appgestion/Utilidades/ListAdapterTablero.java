@@ -17,6 +17,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -77,7 +78,10 @@ public class ListAdapterTablero extends RecyclerView.Adapter<ListAdapterTablero.
         DocumentReference docRef = firebaseFirestore.collection("tablero").document(tablero.getId_tablero());
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                //String titulo = documentSnapshot.getString("titulo");
+                //titulo = Character.toUpperCase(titulo.charAt(0)) + titulo.substring(1,titulo.length());
                 holder.txt_titulo.setText(documentSnapshot.getString("titulo"));
+                //holder.txt_titulo.setText(documentSnapshot.getString("titulo"));
             }
         });
         firebaseFirestore.collection("tarea").whereEqualTo("id_tablero", tablero.getId_tablero()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {

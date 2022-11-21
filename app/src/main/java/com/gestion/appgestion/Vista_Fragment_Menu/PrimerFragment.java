@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,7 @@ import java.util.Map;
 public class PrimerFragment extends Fragment implements View.OnClickListener {
 
     FloatingActionButton btn_agregar_tablero;
-    List<Tablero> tableroList;
+    List<Tablero> tableroList = new ArrayList<>();;
     TextView resultado;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
@@ -102,8 +103,43 @@ public class PrimerFragment extends Fragment implements View.OnClickListener {
         loadingBar.show();
     }
 
+
+
+    /*public void listar_Tablero(){
+        Query docRef = firebaseFirestore.collection("tablero").orderBy("fecha_creacion", Query.Direction.DESCENDING).whereEqualTo("id_usuario", id);
+        docRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                tableroList.clear();
+                for (QueryDocumentSnapshot document : value) {
+                    tablero = new Tablero();
+                    tablero.setId_tablero(document.getId());
+                    tablero.setTitulo(document.getString("titulo"));
+                    tablero.setFecha_creación("fecha_creacion");
+                    tablero.setFavorito(document.getBoolean("favorito"));
+                    tablero.setId_usuario(String.valueOf(document.get("id_usuario")));
+                    tableroList.add(tablero);
+                }
+                listAdapter = new ListAdapterTablero(tableroList, getContext(), new ListAdapterTablero.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(Tablero item) {
+                        startActivity(new Intent(getContext(), Detalle_Tablero.class).putExtra("class_tablero",item));//enviamos los datos datos del tablero a dellate_tablero
+                        getActivity().overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
+                    }
+                });
+                RecyclerView recyclerView = getView().findViewById(R.id.listRecycleView_tablero);
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setAdapter(listAdapter);
+                if(listAdapter.getItemCount()<=0){
+                    resultado.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }*/
+
     public void listar_Tablero(){//https://www.youtube.com/watch?v=Mne2SrtySME
-        firebaseFirestore.collection("tablero").whereEqualTo("id_usuario", id ).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        firebaseFirestore.collection("tablero").orderBy("fecha_creacion", Query.Direction.DESCENDING).whereEqualTo("id_usuario", id ).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 tableroList = new ArrayList<>();

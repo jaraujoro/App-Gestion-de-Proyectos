@@ -1,6 +1,7 @@
 package com.gestion.appgestion.Utilidades;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ public class ModalComprobacion extends DialogFragment {
 
     private FirebaseFirestore firebaseFirestore;
     private Comprobacion comprobacion;
-    private List<Comprobacion> comprobacionList;
+    private List<Comprobacion> comprobacionList = new ArrayList<>();;
     private Tarea tarea;
     private LinearLayout txt_informacion;
     private TextView comprobaciones_realizadas, total_comprobaciones;
@@ -55,15 +56,16 @@ public class ModalComprobacion extends DialogFragment {
     }
 
     public void listar_Comprobacion(View view){
-        firebaseFirestore.collection("comprobacion").whereEqualTo("id_tarea", tarea.getId()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        firebaseFirestore.collection("comprobacion").orderBy("fecha_creacion", Query.Direction.DESCENDING).whereEqualTo("id_tarea", tarea.getId()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
         @Override
         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-            comprobacionList = new ArrayList<>();
+            comprobacionList.clear();
             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                 comprobacion = new Comprobacion();
                 comprobacion.setId(document.getId());
                 comprobacion.setTitulo(document.getString("titulo"));
                 comprobacion.setRealizado(document.getBoolean("realizado"));
+                comprobacion.setFecha_creacion(String.valueOf(document.getDate("fecha_creacion")));
                 comprobacionList.add(comprobacion);
             }
         }}).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

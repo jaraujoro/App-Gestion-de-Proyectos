@@ -5,15 +5,25 @@ public class Comprobacion {
     private String id;
     private String titulo;
     private boolean realizado;
+    private String fecha_creacion;
 
-    public Comprobacion(String id, String titulo, boolean realizado) {
+    public Comprobacion(String id, String titulo, boolean realizado, String fecha_creacion) {
         this.id = id;
         this.titulo = titulo;
         this.realizado = realizado;
+        this.fecha_creacion = fecha_creacion;
     }
 
     public Comprobacion() {
 
+    }
+
+    public String getFecha_creacion() {
+        return fecha_creacion;
+    }
+
+    public void setFecha_creacion(String fecha_creacion) {
+        this.fecha_creacion = fecha_creacion;
     }
 
     public Comprobacion(String titulo) {
